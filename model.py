@@ -15,32 +15,30 @@ class AR(base):
     def loss(self, X):
         """X is dataset, right now X is a row vector"""
         """phi is a column vector, and we need to make it into matrix form"""
-
+        num_data = X.shape[0]
         input_dim = X.shape[1]    
         lag = self._lag    
         phi = self.params['phi']
         sigma = self.params['sigma']
         intercept = self.params['intercept']
-
         
-        
-        loglikelihood = 0
+        loglikelihood = 0.0
         grad_phi = np.zeros((lag,1))
-        grad_intercept = 0
-        grad_sigma = 0
+        grad_intercept = 0.0
+        grad_sigma = 0.0
 
 
         for i in range(input_dim - lag):
             """np.fliplr can only flip matrix form vector"""
-            temp = intercept + np.dot(np.matrix(X[0,i:(i+lag+1)]), np.transpose(np.fliplr(np.hstack(([[-1.0]],phi)))))
+            temp = intercept + np.dot(X[0,i:(i+lag+1)], np.vstack((np.flipud(phi),-1.0)))
             loglikelihood -= temp**2
-            grad_phi -= temp * (np.fliplr(np.matrix(X[0,i:(i+lag)])))
+            grad_phi -= float(temp) * (np.fliplr(np.matrix(X[0,i:(i+lag)]))).T
             grad_intercept -= temp
             grad_sigma += temp**2
 
         loglikelihood = loglikelihood / (2 * sigma**2)
         loglikelihood += (lag - input_dim) / 2 * math.log(sigma**2)
-        grad_phi = (grad_phi / (sigma**2)).T
+        grad_phi = grad_phi / (sigma**2)
         grad_intercept = grad_intercept / (sigma**2)
         grad_sigma = grad_sigma / (sigma**3)
         grad_sigma += (lag - input_dim) / (sigma)

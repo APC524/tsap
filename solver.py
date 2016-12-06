@@ -14,11 +14,11 @@ class Solver(object):
     # Unpack keyword arguments
     self.update_rule = kwargs.pop('update_rule', 'sgd')
     self.optim_config = kwargs.pop('optim_config', {})
-    self.batch_size = kwargs.pop('batch_size', 100)
-    self.num_epochs = kwargs.pop('num_epochs', 10)
+    self.batch_size = kwargs.pop('batch_size', 1)
+    self.num_epochs = kwargs.pop('num_epochs', 100)
 
-    self.print_every = kwargs.pop('print_every', 10)
-    self.verbose = kwargs.pop('verbose', True)
+    # self.print_every = kwargs.pop('print_every', 10)
+    # self.verbose = kwargs.pop('verbose', True)
 
     # Throw an error if there are extra keyword arguments
     if len(kwargs) > 0:
