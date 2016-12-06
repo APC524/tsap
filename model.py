@@ -29,6 +29,7 @@ class AR(base):
         grad_intercept = 0
         grad_sigma = 0
 
+
         for i in range(input_dim - lag):
             """np.fliplr can only flip matrix form vector"""
             temp = intercept + np.dot(np.matrix(X[0,i:(i+lag+1)]), np.transpose(np.fliplr(np.hstack(([[-1.0]],phi)))))
@@ -52,5 +53,54 @@ class AR(base):
 
 
         return loglikelihood, grads
+
+
+class MA(base):
+    def __init__(self, lag, phi, sigma, intercept):
+        """lag, phi, sigma, intercept is the parameter of AR"""
+        self._lag = lag
+        self.params = {}
+        self.params['phi'] = phi 
+        self.params['sigma'] = sigma
+        self.params['intercept'] = intercept
+
+    def loss(self, X):
+        """X is dataset, right now X is a row vector"""
+        """phi is a column vector, and we need to make it into matrix form"""
+
+        input_dim = X.shape[1]    
+        lag = self._lag    
+        phi = self.params['phi']
+        sigma = self.params['sigma']
+        intercept = self.params['intercept']
+
+        
+        
+        loglikelihood = 0
+        grad_phi = np.zeros((lag,1))
+        grad_intercept = 0
+        grad_sigma = 0
+
+        loglikelihood=-input_dim/2*math.log(2*math.pi*sigma**2)
+
+        autocov = np.zeros((lag+1,1))
+        autocov[0]=sigma**2+np.dot(phi,phi)*sigma**2[0,0]
+        for i in range(lag):
+            autocov[i+1]=np.dot(phi[0:lag-i-2],phi[i+1:lag-1])*sigma**2[0,0]-phi[i]*sigma**2
+
+        covmat=np.zeros((input_dim,input_dim))
+        for i in range(input_dim):
+            for j in range(i+1):
+                if abs(i-j)<=lag:
+                    covmat[i,j]=autocov[abs(i-j)]
+                    covmat[j,i]=autocov[abs(i-j)]
+        
+        loglikelihood -= 0.5*math.log(abs(np.linalg.det(covmat)))+float(1)/2/sigma/sigma*np.matmul(np.matmul(np.transpose(X),inv(autocov)),X)[0,0]
+
+
+
+
+
+        return loglikelihood
 
 
