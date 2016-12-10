@@ -51,6 +51,19 @@ class AR(base):
 
         return loglikelihood, grads
 
+    def predict(self, X, nstep):
+        lag = self._lag    
+        phi = self.params['phi']
+        sigma = self.params['sigma']
+        intercept = self.params['intercept']
+        input_dim = X.shape[1]
+
+
+        pred_state = np.zeros((1,nstep))
+        train = np.hstack((X[0,(input_dim-nstep):input_dim], pred_state))
+        for i in range(nstep):
+            pred_state(0,i) = np.dot(train((input_dim+i-lag):(input_dim+i)),phi) + intercept
+
 
 class MA(base):
     def __init__(self, lag, phi, sigma, intercept):
