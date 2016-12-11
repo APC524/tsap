@@ -60,9 +60,9 @@ class AR(base):
 
 
         pred_state = np.zeros((1,nstep))
-        train = np.hstack((X[0,(input_dim-nstep):input_dim], pred_state))
+        train = np.hstack((X[0,(input_dim-lag):input_dim], pred_state))
         for i in range(nstep):
-            pred_state(0,i) = np.dot(train((input_dim+i-lag):(input_dim+i)),phi) + intercept
+            pred_state(0,i) = np.dot(train[(input_dim+i-lag):(input_dim+i)],phi) + intercept
 
 
 class MA(base):
