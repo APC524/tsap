@@ -124,7 +124,7 @@ class MA(base):
         intercept = self.params['intercept']
 
         
-        
+        """initialization"""
         loglikelihood = 0
         grad_phi = np.zeros((lag,1))
         grad_intercept = 0
@@ -132,11 +132,13 @@ class MA(base):
 
         loglikelihood=-input_dim/2*math.log(2*math.pi*sigma**2)
 
+        """Derive autocorrelation for likelihood function"""
         autocov = np.zeros((lag+1,1))
         autocov[0]=sigma**2+np.dot(phi,phi)*sigma**2[0,0]
         for i in range(lag):
             autocov[i+1]=np.dot(phi[0:lag-i-2],phi[i+1:lag-1])*sigma**2[0,0]-phi[i]*sigma**2
 
+        """Derive the covariance matrix for likelihood function"""
         covmat=np.zeros((input_dim,input_dim))
         for i in range(input_dim):
             for j in range(i+1):
@@ -151,5 +153,24 @@ class MA(base):
 
 
         return loglikelihood
+
+
+        
+    """predict: does the prediction. Given the sample, it predicts future prices. nstep: how many future prices you wanna predict """
+    def predict(self, X, nstep):
+        """X is a row vector"""
+        lag = self._lag    
+        phi = self.params['phi']
+        sigma = self.params['sigma']
+        intercept = self.params['intercept']
+        input_dim = X.shape[1]
+
+        """pred_state stores the predicted prices, it is a row vector """
+        pred_state = np.zeros((1,nstep))
+        train = np.hstack((X[0,(input_dim-lag):input_dim], pred_state))
+        for i in range(nstep):
+            pred_state(0,i) = np.dot(train[(input_dim+i-lag):(input_dim+i)],phi) + intercept
+
+        return pred_state
 
 
