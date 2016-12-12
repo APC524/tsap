@@ -64,6 +64,22 @@ class AR(base):
         for i in range(nstep):
             pred_state(0,i) = np.dot(train[(input_dim+i-lag):(input_dim+i)],phi) + intercept
 
+def max_drawdown(X):
+    l = X.shape[1]
+    diff = np.zeros((l - 1,1))
+
+    for i in range(l-1):
+        diff[i] = X[i+1] - X[i]
+
+    temp_sum = 0
+    min_num = 0
+    for i in range(l-1):
+        if temp_sum > 0:
+            temp_sum = 0
+        if temp_sum < min_num:
+            min_num = temp_sum
+    return min_num
+
 
 class MA(base):
     def __init__(self, lag, phi, sigma, intercept):
