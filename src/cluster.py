@@ -40,7 +40,7 @@ class Cluster(object):
         return clusters, labels
 
 
-    def kMeans(self, nClusters, maxIter=300, nInit=10):
+    def kMeans(self, nClusters, maxIter=300):
         """
         K-means clustering algorithm.
 
@@ -52,10 +52,6 @@ class Cluster(object):
                     centroids to generate.
         maxIter : int, optional, default 300
                     Maximum number of iterations of the k-means algorithm to run.
-        nInit : int, optional, default: 10
-                    Number of time the k-means algorithm will be run with
-                    different centroid seeds. The final results will be the
-                    best output of n_init consecutive runs in terms of inertia.
 
         Returns:
         centroid :  float ndarray with shape (k, n_features)
@@ -79,8 +75,12 @@ class Cluster(object):
 
         # set flag of convergence
         flag_converge = False
+        nite = 0 # iteration counter
 
         while not flag_converge:
+            nite = nite + 1
+            if nite > maxIter:
+                raise RuntimeError('Exceeds maximum number of iterations')
             # obtain new estimate of clusters
             for i in range(nClusters):
                 class_index = cluster[i]
@@ -92,3 +92,8 @@ class Cluster(object):
         clusters = new_clusters
         labels = new_labels
         return centroid, labels, clusters
+
+
+
+
+        def Gaussian_mixture
