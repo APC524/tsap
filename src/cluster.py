@@ -11,6 +11,10 @@ class Cluster(object):
         self._nsample = X.shape[0]
         self._nfeature = X.shape[1]
 
+
+    ###################################################################
+
+
     def assign_label(self, Centers):
         """ Assign labels to the data points
             Input:
@@ -95,5 +99,24 @@ class Cluster(object):
 
 
 
+        ###################################################################
 
+
+        import scipy.cluster.hierarchy as hierarchy
+        def H_clustering(self, nClusters, cluster_metric = 'euclidian', linkage_method = 'ward'):
+            # construct hierarchical clustering matrix
+            Z = hierarchy.linkage(self._X, metric=cluster_metric, method = linkage_method)
+            # obtain labels
+            labels = fcluster(Z, nClusters, criterion='maxclust')
+            clusters = {}
+            centroid = np.zeros(nClusters, self._nfeature)
+            for i in range(nClusters):
+                class_index  = np.where( labels == i)[0]
+                clusters[i].append(class_index)
+                centroid[i,:] = np.mean(self._X[class_index, :], axis = 0)
+            return centroid, labels, clusters
+
+
+
+        ###################################################################
         def Gaussian_mixture
