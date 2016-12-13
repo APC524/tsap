@@ -17,7 +17,7 @@ class Solver(object):
     self.batch_size = kwargs.pop('batch_size', 1)
     self.num_epochs = kwargs.pop('num_epochs', 100)
 
-    # self.print_every = kwargs.pop('print_every', 10)
+    self.print_every = kwargs.pop('print_every', 10)
     # self.verbose = kwargs.pop('verbose', True)
 
     # Throw an error if there are extra keyword arguments
@@ -57,13 +57,13 @@ class Solver(object):
     # Compute loss and gradient
     # loss, grads = self.model.loss(X_batch)
     loss, grads = self.model.loss(self.X)
-    print loss, grads
+    # print loss, grads
     self.loss_history.append(loss)
 
     # Perform a parameter update
     for p, w in self.model.params.iteritems():
       dw = grads[p]
-      print dw
+      # print dw
       config = self.optim_configs[p]
       
       next_w, next_config = self.update_rule(w, dw, config)
@@ -79,4 +79,6 @@ class Solver(object):
     print num_iterations
     for t in xrange(num_iterations):
       self._step()
+      if (t+1) % self.print_every == 0:
+        print "the loss is %f", self.loss_history[-1]
 
