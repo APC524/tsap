@@ -1,2 +1,11 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.ipynb
+
+# Temporary files
+tmp*
+
+# System files
 .DS_Store
-*.pyc
