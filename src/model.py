@@ -1,6 +1,7 @@
 import numpy as np
 import math
 from basemodel import base
+import matplotlib.pyplot as plt
 
 
 """class AR implements the AR model which has __init__ , loss and predict"""
@@ -22,10 +23,13 @@ class AR(base):
         """X is dataset, right now X is a row vector"""
         """phi is a column vector"""
 
+        rt = get_return(X)
+
+
         """the number of samples, usually it's about how many stocks we have """
-        num_data = X.shape[0]
+        num_data = rt.shape[0]
         """the length of time"""
-        input_dim = X.shape[1] 
+        input_dim = rt.shape[1] 
 
         """parameters"""   
         lag = self._lag    
@@ -70,16 +74,30 @@ class AR(base):
         phi = self.params['phi']
         sigma = self.params['sigma']
         intercept = self.params['intercept']
-        input_dim = X.shape[1]
+
+        rt = get_return(X)
+        input_dim = rt.shape[1] 
+
+        if input_dim < lag:
+            print "The data is not enough"
+            exit(0)
 
         """pred_state stores the predicted prices, it is a row vector """
+        pred_rt = []
+        for i in range(nstep):
+            pred_rt.append(0)
+
+        train = np.hstack((X[0,(input_dim-lag):input_dim], pred_rt))
+        for i in range(nstep):
+            pred_rt[i] = np.dot(train[i:(i+2)],phi) + intercept
+
         pred_state = []
         for i in range(nstep):
             pred_state.append(0)
 
-        train = np.hstack((X[0,(input_dim-lag):input_dim], pred_state))
-        for i in range(nstep):
-            pred_state[i] = np.dot(train[i:(i+2)],phi) + intercept
+        pred_state[0] = X[0,X.shape[1]-1] * (1 + rt[0,0])
+        for i in range(nstep-1):
+            pred_state[i+1] = pred_state[i] * (1 + rt[0,i+1])
 
         return pred_state
 
@@ -119,6 +137,18 @@ def get_return(X, option = 0):
         # we are using log return
         rt = math.log(X[:,1:input_dim]/ X[:,0:input_dim-1])
     return rt 
+
+def plot_price(X):
+    plt.plot(X)
+    plt.ylabel('stock prices')
+    plt.show()
+
+def plot_price_pred_vs_true (X, Y):
+    plt.plot(X,'b')
+    plt.plot(Y,'r')
+    plt.ylabel('stock prices')
+    plt.show()
+
 
 
 class MA(base):
