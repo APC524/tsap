@@ -103,6 +103,20 @@ def max_drawdown(X):
             min_num = temp_sum
     return min_num
 
+def get_return(X, option = 0):
+
+    """the number of samples, usually it's about how many stocks we have """
+    num_data = X.shape[0]
+    """the length of time"""
+    input_dim = X.shape[1] 
+
+    if option == 0:
+        rt = (X[:,1:input_dim] - X[:,0:input_dim-1]) / X[:,0:input_dim-1]
+    else:
+        # we are using log return
+        rt = math.log(X[:,1:input_dim]/ X[:,0:input_dim-1])
+    return rt 
+
 
 class MA(base):
     def __init__(self, lag, phi, sigma, intercept):

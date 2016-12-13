@@ -1,7 +1,6 @@
 
 
-
-import numpy as N
+import numpy as np
 
 class base(object):
 
@@ -9,3 +8,5 @@ class base(object):
         pass
     def loss(self, X):
         pass
+    def predict(self, X, nstep):
+    	pass
