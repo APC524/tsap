@@ -70,7 +70,7 @@ class Cluster(object):
 
 
         # Initialize K-means algorithm by randomly sampling k points
-        idx = nrd.choice(range(self._nfeature), size= nClusters, replace=False)
+        idx = np.random.choice(range(self._nfeature), size= nClusters, replace=False)
         centroid = self._X[idx, :]
 
         # fix centrod, get the label of each data point
@@ -119,4 +119,44 @@ class Cluster(object):
 
 
         ###################################################################
-        def Gaussian_mixture
+        # Gaussian mixture clustering using EM algorithm
+        def Gaussian_mixture(self, nClusters):
+            # Initialize EM algorithm by randomly sampling k points as centers
+            idx = np.random.choice(range(self._nfeature), size= nClusters, replace=False)
+            centroid = self._X[idx, :] # initial mean vectors
+            Sigma = np.zeros(k, self._nfeature, self._nfeature)
+            cov_init = np.cov(self._X.T) # nfeature by nfeature matrix
+            for i in range(nClusters):
+                Sigma[i] = cov_init
+
+        ###################################################################
+        from scipy.spatial.distance import pdist, squareform
+        import scipy.linalg as Linalg
+        def Spectral(self, nClusters, cluster_metric = 'euclidian', sigma = 0.05 ):
+            """ Spectral Clustering
+                cluster_metric is the metric used to compute the affinity matrix
+
+                sigma is the standard deviation used in the Gaussian kernel
+
+            """
+
+            # compute the affinity matrix
+            dist_mat = squareform( pdist (self._X, metric = cluster_metric)/sigma )
+            aff_mat = np.fill_diagonal( np.exp( - dist_mat), 0 )
+
+            # construct D^{-1/2} by taking the square root of the sum of column of A
+            D_mat = np.diag( 1 / np.sqrt(np.sum(A, axis = 0)) )
+
+            # graph Laplacian, an n by n matrix
+            L = np.dot( np.dot(D_mat, aff_mat), D_mat )
+
+            # Now that we have the graph Laplacian, spectral clustering does eigen decomposition on L and obtain the first k eigenvectors
+            _ , X_embed =  Linalg.eigh(L, eigvals = (self._nsample - nClusters, self._nsample-1))
+
+            # X_embed can be viewd as the embedding of data
+
+            # normalize the rows of X_embed to unit norm
+            row_norm = np.linalg.norm( X_embed, axis = 1).reshape( self._nsample, 1)
+            Y = np.divide(X_embed, row_norm)  # n by k matrix, feed to K means
+            -, labels, clusters = kMeans(Y, nClustres)
+            return labels, clusters, X_embed
