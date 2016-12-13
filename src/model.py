@@ -73,10 +73,13 @@ class AR(base):
         input_dim = X.shape[1]
 
         """pred_state stores the predicted prices, it is a row vector """
-        pred_state = np.zeros((1,nstep))
+        pred_state = []
+        for i in range(nstep):
+            pred_state.append(0)
+
         train = np.hstack((X[0,(input_dim-lag):input_dim], pred_state))
         for i in range(nstep):
-            pred_state(0,i) = np.dot(train[(input_dim+i-lag):(input_dim+i)],phi) + intercept
+            pred_state[i] = np.dot(train[i:(i+2)],phi) + intercept
 
         return pred_state
 
@@ -180,10 +183,13 @@ class MA(base):
         input_dim = X.shape[1]
 
         """pred_state stores the predicted prices, it is a row vector """
-        pred_state = np.zeros((1,nstep))
+        pred_state = []
+        for i in range(nstep):
+            pred_state.append(0)
+
         train = np.hstack((X[0,(input_dim-lag):input_dim], pred_state))
         for i in range(nstep):
-            pred_state(0,i) = np.dot(train[(input_dim+i-lag):(input_dim+i)],phi) + intercept
+            pred_state[i] = np.dot(train[i:(i+2)],phi) + intercept
 
         return pred_state
 
