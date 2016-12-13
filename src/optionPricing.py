@@ -11,12 +11,12 @@ class OptionPricing(object):
         self._r = r
         self._T = T
         self._K = K
-        if Sboundary is None:
+        if Sboundary is None or Vboundary is None:
             self._Sboundary = 10*self._K
-        if Vboundary is None:
-            self._Vboundary = 9*self._K
-        self._Sboundary = Sboundary
-        self._Vboundary = Vboundary
+            self._Vboundary = max(self._Sboundary-self._K,0)
+        else:
+            self._Sboundary = Sboundary
+            self._Vboundary = Vboundary
         
     def BlackScholesEqn(self, dS, dt):
         """
@@ -31,11 +31,15 @@ class OptionPricing(object):
         V: array, shape [nS, nt]
         """
         nS, nt = int(self._Sboundary/dS), int(self._T/dt)
+        # test stability condition
+        if(dt>1./(self._sigma**2*(nS-1)+self._r/2)):
+            print 'Make sure dt < 1/(sigma**2(nS-1)+r/2)'
+            return 0
         V = np.zeros((nS,nt))
-        # terminal condition
+        # terminal condition at t = T, j = nt-1
         for i in range(nS):
             V[i,-1] = max(i*dS,0)
-        # fixed boundary condition
+        # fixed boundary condition at S=0(i=0), S=Sboundary(i=nS-1)
         for j in range(nt):
             V[0,j] = 0
             V[-1,j] =self._Vboundary
@@ -49,6 +53,7 @@ class OptionPricing(object):
                 S = i*dS
                 spatialDeritive = -0.5*self._sigma**2*S**2*d2VdS2 - self._r*S*dVdS + self._r*V[i,j]
                 V[i,j-1] = V[i,j] - dt*spatialDeritive
+                #print 'j = %d, i = %d, V[i,j] = %f' % (j, i,V[i,j])
         return V
         
     def optionPrice(self,V,S,t):
