@@ -11,21 +11,21 @@ sigma = 0.1
 r = 0.01
 T = 1
 K = 1
-Sboundary=10*K
-Vboundary=9*K
+Smax=5*K
+Vmax=max(Smax-K,0)
 
 # test optionPricing class
-optionPriceobj = optionPricing.OptionPricing(sigma,r,T,K,Sboundary,Vboundary)
-dS = 0.1
+optionPriceobj = optionPricing.OptionPricing(sigma,r,T,K,Smax,Vmax)
+dS = 1e-1
 dt = 1e-2
 V = optionPriceobj.BlackScholesEqn(dS,dt)
 
 # define (S,t) grids
-nS, nt = int(Sboundary/dS), int(T/dt)
-S = np.arange(0, Sboundary, dS)
+nS, nt = int(Smax/dS), int(T/dt)
+S = np.arange(0, Smax, dS)
 t = np.arange(0, T, dt)
 S, t = np.meshgrid(S, t)
-levels = np.arange(0,Sboundary,0.1)
+levels = np.arange(0,Smax,dS)
 
 # visualize V(S,t) as contourf
 plt.figure()
@@ -33,5 +33,7 @@ plt.contourf(S, t, V.T, levels, cmap=plt.cm.coolwarm, linewidth=0, antialiased=F
 plt.colorbar()
 plt.xlabel('S/stock price', fontsize=20)   
 plt.ylabel('t/year', fontsize=20)
+plt.xlim([0,Smax])
+plt.ylim([0,T])
 plt.title('option pricing V(S,t)', fontsize=20)
 plt.show()
