@@ -1,5 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import sys
+if "../" not in sys.path:
+  sys.path.append("../src/")
 import optionPricing
 
 # read SP500 data
