@@ -24,19 +24,21 @@ dt = 1e-2
 V = optionPriceobj.BlackScholesEqn(dS,dt)
 
 # define (S,t) grids
-nS, nt = int(Smax/dS), int(T/dt)
-S = np.arange(0, Smax, dS)
-t = np.arange(0, T, dt)
+nS, nt = int(Smax/dS)+1, int(T/dt)+1
+S = np.linspace(0, Smax, nS)
+t = np.linspace(0, T, nt)
 S, t = np.meshgrid(S, t)
 levels = np.arange(0,Smax,dS)
 
-# visualize V(S,t) as contourf
+# visualize V(S,t)
 plt.figure()
+#plt.rc('text', usetex=True)
+plt.rc('font', family='serif')
 plt.contourf(S, t, V.T, levels, cmap=plt.cm.coolwarm, linewidth=0, antialiased=False)
 plt.colorbar()
-plt.xlabel('S/stock price', fontsize=20)   
-plt.ylabel('t/year', fontsize=20)
+plt.xlabel('S/stock price', fontsize=18)   
+plt.ylabel('t/year', fontsize=18)
 plt.xlim([0,Smax])
 plt.ylim([0,T])
-plt.title('option pricing V(S,t)', fontsize=20)
+plt.title('option pricing V(S,t)', fontsize=18)
 plt.show()

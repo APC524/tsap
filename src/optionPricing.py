@@ -31,7 +31,7 @@ class OptionPricing(object):
         Returns:
         V: array, shape [nS, nt]
         """
-        nS, nt = int(self._Smax/dS), int(self._T/dt)
+        nS, nt = int(self._Smax/dS)+1, int(self._T/dt)+1
         # test stability condition
         if(dt>1./(self._sigma**2*(nS-1)+self._r/2)):
             print 'Make sure dt < 1/(sigma**2(nS-1)+r/2)'
