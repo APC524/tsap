@@ -2,6 +2,7 @@ import numpy as np
 import math
 from basemodel import base
 import matplotlib.pyplot as plt
+from gradient_check import eval_numerical_gradient, eval_numerical_gradient_array
 
 
 
@@ -40,9 +41,9 @@ class AR(base):
 
 
         """the number of samples, usually it's about how many stocks we have """
-        num_data = rt.shape[0]
+        num_data = X.shape[0]
         """the length of time"""
-        input_dim = rt.shape[1] 
+        input_dim = X.shape[1] 
 
         """parameters""" 
         if lag is None:  
@@ -95,7 +96,7 @@ class AR(base):
            Output:
                   pred_state: the predicted series based on AR model, which is a row vector"""
 
-       """parameters""" 
+        """parameters"""
         if lag is None:  
             lag = self._lag  
         if phi is None:  
@@ -144,30 +145,42 @@ class MA(base):
 
     ###################################################################
 
-    def loss(self, X):
+    def loss(self, X, lag=None, phi=None, sigma=None, intercept=None):
+        loglikelihood = self.get_loglikelihood(X, lag=lag, phi=phi, sigma=sigma, intercept=intercept)
+        """grad_phi is a column vector"""
+        grads = {} 
+        grads['phi'] = eval_numerical_gradient_array(lambda phi: self.get_loglikelihood(X, lag,phi,sigma,intercept)[0], phi, 1)   
+        grads['intercept'] = eval_numerical_gradient_array(lambda intercept: self.get_loglikelihood(X, lag,phi,sigma,intercept)[0], intercept, 1)
+        grads['sigma'] = eval_numerical_gradient_array(lambda sigma: self.get_loglikelihood(X, lag,phi,sigma,intercept)[0], sigma, 1)
+        return loglikelihood, grads
+
+    def get_loglikelihood(self, X, lag=None, phi=None, sigma=None, intercept=None):
         """X is dataset, right now X is a row vector"""
         """phi is a column vector, and we need to make it into matrix form"""
 
         input_dim = X.shape[1]    
-        lag = self._lag    
-        phi = self.params['phi']
-        sigma = self.params['sigma']
-        intercept = self.params['intercept']
+        if lag is None:  
+            lag = self._lag  
+        if phi is None:  
+            phi = self.params['phi']
+        if sigma is None:
+            sigma = self.params['sigma']
+        if intercept is None:
+            intercept = self.params['intercept']
 
         
         """initialization"""
         loglikelihood = 0
-        grad_phi = np.zeros((lag,1))
-        grad_intercept = 0
-        grad_sigma = 0
 
         loglikelihood=-input_dim/2*math.log(2*math.pi*sigma**2)
 
         """Derive autocorrelation for likelihood function"""
         autocov = np.zeros((lag+1,1))
-        autocov[0]=sigma**2+np.dot(phi,phi)*sigma**2[0,0]
+        temp = sigma**2+np.dot(phi.T,phi)*sigma**2
+        autocov[0]=temp[0,0]
         for i in range(lag):
-            autocov[i+1]=np.dot(phi[0:lag-i-2],phi[i+1:lag-1])*sigma**2[0,0]-phi[i]*sigma**2
+            temp = np.dot(phi[0:lag-i-2].T,phi[i+1:lag-1])*sigma**2
+            autocov[i+1]=temp[0,0]-phi[i]*sigma**2
 
         """Derive the covariance matrix for likelihood function"""
         covmat=np.zeros((input_dim,input_dim))
