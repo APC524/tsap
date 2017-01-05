@@ -12,7 +12,10 @@ class AR(base):
 
     def __init__(self, lag, phi, sigma, intercept):
         """lag, phi, sigma, intercept is the parameter of AR"""
-        """lag is time lag, phi is the coefficient with dimension lag*1, sigma is the common volatility, intercept is just intercept"""
+        """lag is time lag"""
+        """phi is the coefficient with dimension lag*1"""
+        """sigma is the common volatility"""
+        """intercept is just intercept"""
         self._lag = lag
         self.params = {}
         self.params['phi'] = phi 
@@ -24,7 +27,6 @@ class AR(base):
         """phi is a column vector"""
 
         rt = get_return(X)
-
 
         """the number of samples, usually it's about how many stocks we have """
         num_data = rt.shape[0]
@@ -102,6 +104,79 @@ class AR(base):
         return pred_state
 
 
+"""class MA implements the MA model which has __init__ , loss and predict"""
+"""__init__: initialize the model with lag phi sigma and intercept"""
+"""loss: calculate the loglikelihood"""
+"""predict: does the prediction. Given the sample, it predicts future prices """
+class MA(base):
+    def __init__(self, lag, phi, sigma, intercept):
+        """lag, phi, sigma, intercept is the parameter of AR"""
+        self._lag = lag
+        self.params = {}
+        self.params['phi'] = phi 
+        self.params['sigma'] = sigma
+        self.params['intercept'] = intercept
+
+    def loss(self, X):
+        """X is dataset, right now X is a row vector"""
+        """phi is a column vector, and we need to make it into matrix form"""
+
+        input_dim = X.shape[1]    
+        lag = self._lag    
+        phi = self.params['phi']
+        sigma = self.params['sigma']
+        intercept = self.params['intercept']
+
+        
+        """initialization"""
+        loglikelihood = 0
+        grad_phi = np.zeros((lag,1))
+        grad_intercept = 0
+        grad_sigma = 0
+
+        loglikelihood=-input_dim/2*math.log(2*math.pi*sigma**2)
+
+        """Derive autocorrelation for likelihood function"""
+        autocov = np.zeros((lag+1,1))
+        autocov[0]=sigma**2+np.dot(phi,phi)*sigma**2[0,0]
+        for i in range(lag):
+            autocov[i+1]=np.dot(phi[0:lag-i-2],phi[i+1:lag-1])*sigma**2[0,0]-phi[i]*sigma**2
+
+        """Derive the covariance matrix for likelihood function"""
+        covmat=np.zeros((input_dim,input_dim))
+        for i in range(input_dim):
+            for j in range(i+1):
+                if abs(i-j)<=lag:
+                    covmat[i,j]=autocov[abs(i-j)]
+                    covmat[j,i]=autocov[abs(i-j)]
+        
+        loglikelihood -= 0.5*math.log(abs(np.linalg.det(covmat)))+float(1)/2/sigma/sigma*np.matmul(np.matmul(np.transpose(X),inv(autocov)),X)[0,0]
+        return loglikelihood
+
+
+        
+    """predict: does the prediction. Given the sample, it predicts future prices. nstep: how many future prices you wanna predict """
+    def predict(self, X, nstep):
+        """X is a row vector"""
+        lag = self._lag    
+        phi = self.params['phi']
+        sigma = self.params['sigma']
+        intercept = self.params['intercept']
+        input_dim = X.shape[1]
+
+        """pred_state stores the predicted prices, it is a row vector """
+        pred_state = []
+        for i in range(nstep):
+            pred_state.append(0)
+
+        train = np.hstack((X[0,(input_dim-lag):input_dim], pred_state))
+        for i in range(nstep):
+            pred_state[i] = np.dot(train[i:(i+2)],phi) + intercept
+
+        return pred_state
+
+
+
 """max_drawdown is not in any class, it is a function in this file"""
 """Sometimes, we need to control the risk, so we calculate the largest distance that the price can drop down. This function will return a negative 
 number whose absolute value is the largest distance between the peak and the trough"""
@@ -148,79 +223,5 @@ def plot_price_pred_vs_true (X, Y):
     plt.plot(Y,'r')
     plt.ylabel('stock prices')
     plt.show()
-
-
-
-class MA(base):
-    def __init__(self, lag, phi, sigma, intercept):
-        """lag, phi, sigma, intercept is the parameter of AR"""
-        self._lag = lag
-        self.params = {}
-        self.params['phi'] = phi 
-        self.params['sigma'] = sigma
-        self.params['intercept'] = intercept
-
-    def loss(self, X):
-        """X is dataset, right now X is a row vector"""
-        """phi is a column vector, and we need to make it into matrix form"""
-
-        input_dim = X.shape[1]    
-        lag = self._lag    
-        phi = self.params['phi']
-        sigma = self.params['sigma']
-        intercept = self.params['intercept']
-
-        
-        """initialization"""
-        loglikelihood = 0
-        grad_phi = np.zeros((lag,1))
-        grad_intercept = 0
-        grad_sigma = 0
-
-        loglikelihood=-input_dim/2*math.log(2*math.pi*sigma**2)
-
-        """Derive autocorrelation for likelihood function"""
-        autocov = np.zeros((lag+1,1))
-        autocov[0]=sigma**2+np.dot(phi,phi)*sigma**2[0,0]
-        for i in range(lag):
-            autocov[i+1]=np.dot(phi[0:lag-i-2],phi[i+1:lag-1])*sigma**2[0,0]-phi[i]*sigma**2
-
-        """Derive the covariance matrix for likelihood function"""
-        covmat=np.zeros((input_dim,input_dim))
-        for i in range(input_dim):
-            for j in range(i+1):
-                if abs(i-j)<=lag:
-                    covmat[i,j]=autocov[abs(i-j)]
-                    covmat[j,i]=autocov[abs(i-j)]
-        
-        loglikelihood -= 0.5*math.log(abs(np.linalg.det(covmat)))+float(1)/2/sigma/sigma*np.matmul(np.matmul(np.transpose(X),inv(autocov)),X)[0,0]
-
-
-
-
-
-        return loglikelihood
-
-
-        
-    """predict: does the prediction. Given the sample, it predicts future prices. nstep: how many future prices you wanna predict """
-    def predict(self, X, nstep):
-        """X is a row vector"""
-        lag = self._lag    
-        phi = self.params['phi']
-        sigma = self.params['sigma']
-        intercept = self.params['intercept']
-        input_dim = X.shape[1]
-
-        """pred_state stores the predicted prices, it is a row vector """
-        pred_state = []
-        for i in range(nstep):
-            pred_state.append(0)
-
-        train = np.hstack((X[0,(input_dim-lag):input_dim], pred_state))
-        for i in range(nstep):
-            pred_state[i] = np.dot(train[i:(i+2)],phi) + intercept
-
-        return pred_state
 
 
