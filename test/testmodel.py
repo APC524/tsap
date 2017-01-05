@@ -1,6 +1,7 @@
 import unittest
 import math
 import numpy as np
+import sys
 if "../" not in sys.path:
   sys.path.append("../src/")
 import model

@@ -4,27 +4,38 @@ from basemodel import base
 import matplotlib.pyplot as plt
 
 
-"""class AR implements the AR model which has __init__ , loss and predict"""
-"""__init__: initialize the model with lag phi sigma and intercept"""
-"""loss: calculate the loglikelihood and get its gradient with respect to phi, sigma and intercept"""
-"""predict: does the prediction. Given the sample, it predicts future prices """
-class AR(base):    
+
+
+
+class AR(base):  
+    """class AR implements the AR model which has __init__ , loss and predict as functions"""  
 
     def __init__(self, lag, phi, sigma, intercept):
-        """lag, phi, sigma, intercept is the parameter of AR"""
-        """lag is time lag"""
-        """phi is the coefficient with dimension lag*1"""
-        """sigma is the common volatility"""
-        """intercept is just intercept"""
+        """__init__: initialize the model with lag phi sigma and intercept
+           Input: 
+                 lag: the number of lag in AR model, dimension 1
+                 phi: the coefficients for each lag, dimension lag, column vector
+                 sigma: the standard deviation of the error term, dimension 1
+                 intercept: the constant component in the AR model, dimension 1
+           Output:
+                 _lag: the number of lag in the AR model
+                 params: hash table of phi, sigma and intercept"""
         self._lag = lag
         self.params = {}
         self.params['phi'] = phi 
         self.params['sigma'] = sigma
         self.params['intercept'] = intercept
 
+    ###################################################################
+
+
     def loss(self, X):
-        """X is dataset, right now X is a row vector"""
-        """phi is a column vector"""
+        """loss: return the loglikelihood and its gradient with respect to phi, sigma and intercept
+           Input: 
+                 X: the input time series, each row is about one stock. For one stock, X is a row vector. Note phi is a column vector
+           Output:
+                  loglikelihood: the loglikelihood that calculated from the input time series
+                  grads: hash table that records the gradient of phi sigma and intercept"""
 
         rt = get_return(X)
 
@@ -69,9 +80,17 @@ class AR(base):
 
         return loglikelihood, grads
 
+    ###################################################################
+
     """predict: does the prediction. Given the sample, it predicts future prices. nstep: how many future prices you wanna predict """
     def predict(self, X, nstep):
-        """X is a row vector"""
+        """predict: return the predicted series based on the samples given
+           Input: 
+                 X: the input time series, each row is about one stock. For one stock, X is a row vector. Note phi is a column vector
+                 nstep: the number of steps to predict
+           Output:
+                  pred_state: the predicted series based on AR model, which is a row vector"""
+
         lag = self._lag    
         phi = self.params['phi']
         sigma = self.params['sigma']
@@ -104,6 +123,9 @@ class AR(base):
         return pred_state
 
 
+###################################################################
+
+
 """class MA implements the MA model which has __init__ , loss and predict"""
 """__init__: initialize the model with lag phi sigma and intercept"""
 """loss: calculate the loglikelihood"""
@@ -116,6 +138,8 @@ class MA(base):
         self.params['phi'] = phi 
         self.params['sigma'] = sigma
         self.params['intercept'] = intercept
+
+    ###################################################################
 
     def loss(self, X):
         """X is dataset, right now X is a row vector"""
@@ -153,7 +177,7 @@ class MA(base):
         loglikelihood -= 0.5*math.log(abs(np.linalg.det(covmat)))+float(1)/2/sigma/sigma*np.matmul(np.matmul(np.transpose(X),inv(autocov)),X)[0,0]
         return loglikelihood
 
-
+    ###################################################################
         
     """predict: does the prediction. Given the sample, it predicts future prices. nstep: how many future prices you wanna predict """
     def predict(self, X, nstep):
@@ -175,7 +199,7 @@ class MA(base):
 
         return pred_state
 
-
+###################################################################
 
 """max_drawdown is not in any class, it is a function in this file"""
 """Sometimes, we need to control the risk, so we calculate the largest distance that the price can drop down. This function will return a negative 
@@ -198,6 +222,8 @@ def max_drawdown(X):
         if temp_sum < min_num:
             min_num = temp_sum
     return min_num
+
+###################################################################
 
 def get_return(X, option = 0):
 
