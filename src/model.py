@@ -20,6 +20,7 @@ class AR(base):
            Output:
                  _lag: the number of lag in the AR model
                  params: hash table of phi, sigma and intercept"""
+
         self._lag = lag
         self.params = {}
         self.params['phi'] = phi 
@@ -37,7 +38,6 @@ class AR(base):
                   loglikelihood: the loglikelihood that calculated from the input time series
                   grads: hash table that records the gradient of phi sigma and intercept"""
 
-        rrt = get_return(X)
 
         """the number of samples, usually it's about how many stocks we have """
         num_data = rt.shape[0]
@@ -86,8 +86,8 @@ class AR(base):
 
     ###################################################################
 
-    """predict: does the prediction. Given the sample, it predicts future prices. nstep: how many future prices you wanna predict """
-    def predict(self, X, nstep):
+    
+    def predict(self, X, nstep, lag=None, phi=None, sigma=None, intercept=None):
         """predict: return the predicted series based on the samples given
            Input: 
                  X: the input time series, each row is about one stock. For one stock, X is a row vector. Note phi is a column vector
@@ -95,14 +95,19 @@ class AR(base):
            Output:
                   pred_state: the predicted series based on AR model, which is a row vector"""
 
-        lag = self._lag    
-        phi = self.params['phi']
-        sigma = self.params['sigma']
-        intercept = self.params['intercept']
+       """parameters""" 
+        if lag is None:  
+            lag = self._lag  
+        if phi is None:  
+            phi = self.params['phi']
+        if sigma is None:
+            sigma = self.params['sigma']
+        if intercept is None:
+            intercept = self.params['intercept']
 
-        rt = get_return(X)
-        input_dim = rt.shape[1] 
-
+        """the length of time"""
+        input_dim = X.shape[1] 
+        """check whether there's enough input"""
         if input_dim < lag:
             print "The data is not enough"
             exit(0)
