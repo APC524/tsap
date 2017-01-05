@@ -29,7 +29,7 @@ class AR(base):
     ###################################################################
 
 
-    def loss(self, X):
+    def loss(self, X, lag=None, phi=None, sigma=None, intercept=None):
         """loss: return the loglikelihood and its gradient with respect to phi, sigma and intercept
            Input: 
                  X: the input time series, each row is about one stock. For one stock, X is a row vector. Note phi is a column vector
@@ -37,18 +37,22 @@ class AR(base):
                   loglikelihood: the loglikelihood that calculated from the input time series
                   grads: hash table that records the gradient of phi sigma and intercept"""
 
-        rt = get_return(X)
+        rrt = get_return(X)
 
         """the number of samples, usually it's about how many stocks we have """
         num_data = rt.shape[0]
         """the length of time"""
         input_dim = rt.shape[1] 
 
-        """parameters"""   
-        lag = self._lag    
-        phi = self.params['phi']
-        sigma = self.params['sigma']
-        intercept = self.params['intercept']
+        """parameters""" 
+        if lag is None:  
+            lag = self._lag  
+        if phi is None:  
+            phi = self.params['phi']
+        if sigma is None:
+            sigma = self.params['sigma']
+        if intercept is None:
+            intercept = self.params['intercept']
         
         """initialization"""
         loglikelihood = 0.0
