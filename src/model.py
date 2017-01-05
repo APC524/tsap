@@ -113,22 +113,15 @@ class AR(base):
             print "The data is not enough"
             exit(0)
 
-        """pred_state stores the predicted prices, it is a row vector """
-        pred_rt = []
-        for i in range(nstep):
-            pred_rt.append(0)
-
-        train = np.hstack((X[0,(input_dim-lag):input_dim], pred_rt))
-        for i in range(nstep):
-            pred_rt[i] = np.dot(train[i:(i+2)],phi) + intercept
-
+        """pred_state stores the predicted series, it is a row vector """
         pred_state = []
         for i in range(nstep):
             pred_state.append(0)
 
-        pred_state[0] = X[0,X.shape[1]-1] * (1 + rt[0,0])
-        for i in range(nstep-1):
-            pred_state[i+1] = pred_state[i] * (1 + rt[0,i+1])
+        train = np.hstack((X[0,(input_dim-lag):input_dim], pred_state))
+        for i in range(nstep):
+            pred_state[i] = np.dot(train[i:(i+2)],phi) + intercept
+
 
         return pred_state
 
