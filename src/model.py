@@ -105,6 +105,7 @@ class AR(base):
         if intercept is None:
             intercept = self.params['intercept']
 
+
         """the length of time"""
         input_dim = X.shape[1] 
         """check whether there's enough input"""
