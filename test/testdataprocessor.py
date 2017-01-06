@@ -57,6 +57,36 @@ class TestDataProcessor(unittest.TestCase):
         y = dp.max_drawdown(x)
         self.assertEqual(y,-15.0/16.0)  
 
+   ###################################################################
+
+    def testGetIndicator1(self):
+        """test get_indicator with upper trend"""
+        x = np.array([[1.0, 3.0, 5.0, 7.0]])
+        y = dp.get_indicator(x)
+        z = np.array([[-1, 0, 0, 1]])
+        np.testing.assert_array_almost_equal(y,z)
+
+    def testGetIndicator2(self):
+        """test get_indicator with lower trend"""
+        x = np.array([[10.0, 8.0, 6.0, 4.0, 2.0]])
+        y = dp.get_indicator(x)
+        z = np.zeros((1,5))
+        np.testing.assert_array_almost_equal(y,z)
+
+    def testGetIndicator3(self):
+        """test get_indicator without trend, trough before peak"""
+        x = np.array([[2.0, 8.5, 6.0, 3.0, 10.0, 1.5, 23.0, 7.5]])
+        y = dp.get_indicator(x)
+        z = np.array([[0, 0, 0, 0, 0, -1, 1, 0]])
+        np.testing.assert_array_almost_equal(y,z)
+
+    def testGetIndicator4(self):
+        """test get_indicator without trend, trough after peak"""
+        x = np.array([[2.0, 8.5, 6.0, 3.0, 10.0, 1.5, 2.3, 7.5]])
+        y = dp.get_indicator(x)
+        z = np.array([[0, 0, 0, 0, 0, 0, 0, 0]])
+        np.testing.assert_array_almost_equal(y,z)
+
 
 if __name__ == "__main__":
     unittest.main()
