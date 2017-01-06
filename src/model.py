@@ -217,27 +217,7 @@ class MA(base):
 
 ###################################################################
 
-"""max_drawdown is not in any class, it is a function in this file"""
-"""Sometimes, we need to control the risk, so we calculate the largest distance that the price can drop down. This function will return a negative 
-number whose absolute value is the largest distance between the peak and the trough"""
-def max_drawdown(X):
-    """the length of time"""
-    l = X.shape[1]
-    diff = np.zeros((l - 1,1))
 
-    """get the difference of price series"""
-    for i in range(l-1):
-        diff[i] = X[i+1] - X[i]
-
-    """dynamic programming"""
-    temp_sum = 0
-    min_num = 0
-    for i in range(l-1):
-        if temp_sum > 0:
-            temp_sum = 0
-        if temp_sum < min_num:
-            min_num = temp_sum
-    return min_num
 
 
 def plot_price(X):
