@@ -126,8 +126,8 @@ def get_indicator(X):
 
 	"""trough is before the peak"""
 	if min_index < max_index:
-		indicator[0,min_index] = -1
-		indicator[0,max_index] = 1
+		indicator[0,min_index] = 1.0
+		indicator[0,max_index] = -1.0
 
 	return indicator
 

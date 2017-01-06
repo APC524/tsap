@@ -63,7 +63,7 @@ class TestDataProcessor(unittest.TestCase):
         """test get_indicator with upper trend"""
         x = np.array([[1.0, 3.0, 5.0, 7.0]])
         y = dp.get_indicator(x)
-        z = np.array([[-1, 0, 0, 1]])
+        z = np.array([[1, 0, 0, -1]])
         np.testing.assert_array_almost_equal(y,z)
 
     def testGetIndicator2(self):
@@ -77,7 +77,7 @@ class TestDataProcessor(unittest.TestCase):
         """test get_indicator without trend, trough before peak"""
         x = np.array([[2.0, 8.5, 6.0, 3.0, 10.0, 1.5, 23.0, 7.5]])
         y = dp.get_indicator(x)
-        z = np.array([[0, 0, 0, 0, 0, -1, 1, 0]])
+        z = np.array([[0, 0, 0, 0, 0, 1, -1, 0]])
         np.testing.assert_array_almost_equal(y,z)
 
     def testGetIndicator4(self):
