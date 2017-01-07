@@ -39,6 +39,33 @@ class TestDataProcessor(unittest.TestCase):
 
     ###################################################################
 
+
+    def testGetPrice1(self):
+        """test get_price with a row vector whose elements are all 1.0"""
+        x = np.array([np.repeat(0.0,9)])
+        s = 1.0
+        y = dp.get_price(s,x)
+        z = np.array([np.repeat(1.0,9)])
+        np.testing.assert_array_almost_equal(y,z)
+
+    def testGetPrice2(self):
+        """test get_price with a row vector whose elements are not the same"""
+        x = np.array([[1.0, 0.5, 2.0, 1.0]])
+        s = 1.0
+        y = dp.get_price(s,x)
+        z = np.array([[2.0, 3.0, 9.0, 18.0]])
+        np.testing.assert_array_almost_equal(y,z)
+    
+    def testGetPrice3(self):
+        """test get_price with a row vector whose elements are not the same, can be negative"""
+        x = np.array([[1.0, -0.5, -0.5, 3.0]])
+        s = 1.0
+        y = dp.get_price(s,x)
+        z = np.array([[2.0, 1.0, 0.5, 2.0]])
+        np.testing.assert_array_almost_equal(y,z)
+
+    ###################################################################
+
     def testMaxDrawdown1(self):
         """test max_drawdown with upper trend"""
         x = np.array([[1.0, 2.0, 3.0, 8.0]])

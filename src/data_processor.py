@@ -24,6 +24,38 @@ def get_return(X, option = 0):
 
 ###################################################################
 
+def get_price(start, rt, option = 0):
+	"""get_price: return the price based on daily return of given time series
+       Input: 
+             start: number, the start point of a series. Usually it's a stock price
+             rt: numpy array and a row vector, the daily return time series
+             option: set the type of the return. The default is option = 0, in which it gives discrete return. If option is not 0, then it will calculate the log return
+       Output:
+              pred_price: the daily price time series"""
+
+	"""how many steps we can forecast"""
+	nstep = rt.shape[1]
+
+	"""initialize the pred_price"""
+	pred_price = []
+	for i in range(nstep):
+		pred_price.append(0)
+
+	"""calculate the pred_price"""
+	if option == 0:
+		pred_price[0] = start * (1 + rt[0,0])
+		for i in range(nstep-1):
+			pred_price[i+1] = pred_price[i] * (1 + rt[0,i+1])
+	else:
+		pred_price[0] = start * math.exp(rt[0,0])
+		for i in range(nstep-1):
+			pred_price[i+1] = pred_price[i] * math.exp(rt[0,i+1])
+
+	"""need to convert the pred_price to numpy array"""
+	return np.array([pred_price])
+
+###################################################################
+
 def max_drawdown(X):
 	"""max_drawdown: return the largest distance that the price can drop down. This function will return a negative 
                     number whose absolute value is the largest distance between the peak and the trough (in terms of percentage)
