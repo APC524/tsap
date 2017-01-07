@@ -117,14 +117,20 @@ class AR(base):
         """pred_state stores the predicted series, it is a row vector """
         pred_state = []
         for i in range(nstep):
-            pred_state.append(0)
+            pred_state.append(0.0)
 
+        """define the training set"""
         train = np.hstack((X[0,(input_dim-lag):input_dim], pred_state))
-        for i in range(nstep):
-            pred_state[i] = np.dot(train[i:(i+2)],np.flipud(phi)) + intercept
 
-        """convert pred_state to numpy array, a row vector"""
-        return np.array([pred_state])
+        """make the pred_state as numpy array"""
+        pred_state = np.array([pred_state])
+        for i in range(nstep):
+            """prediction"""
+            pred_state[0,i] = np.dot(train[i:(i+lag)],np.flipud(phi)) + intercept
+            """update training set"""
+            train[lag+i] = pred_state[0,i]
+
+        return pred_state
 
 
 ###################################################################
