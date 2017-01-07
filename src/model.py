@@ -123,8 +123,8 @@ class AR(base):
         for i in range(nstep):
             pred_state[i] = np.dot(train[i:(i+2)],np.flipud(phi)) + intercept
 
-
-        return pred_state
+        """convert pred_state to numpy array, a row vector"""
+        return np.array([pred_state])
 
 
 ###################################################################
