@@ -2,8 +2,8 @@ import unittest
 import math
 import numpy as np
 import sys
-#if "../" not in sys.path:
-#  sys.path.append("../src/")
+if "../" not in sys.path:
+  sys.path.append("../src/")
 import model
 
 class TestModel(unittest.TestCase):
@@ -15,9 +15,8 @@ class TestModel(unittest.TestCase):
         l1=mod.loss(x)[0]
         phi=np.array([0.98])
         sigma=1
-        T=2
         intercept=2
-        l2=-T/2*math.log(2*math.pi)-math.log(sigma**2/(1-phi[0]**2))/2-(1-phi[0]**2)/2/(sigma**2)*((x[0,0]-intercept/(1-phi[0]))**2)-(T-1)/2*math.log(sigma**2)-float(1)/2/(sigma**2)*(x[0,1]-2-phi[0]*x[0,0])**2
+        l2=-float(1)/2*math.log(2*math.pi)-float(1)/2*math.log(sigma**2)-float(1)/2/(sigma**2)*(x[0,1]-2-phi[0]*x[0,0])**2
         self.assertEqual(l1, l2)
 
     def testARlklh2(self):
@@ -30,7 +29,7 @@ class TestModel(unittest.TestCase):
         phi=np.array([[1.01],[1.02]])
         sigma=1
         intercept=2
-        l2=-(intercept + np.dot(x, np.vstack((np.flipud(phi),np.array([-1.0])))))**2/2/(sigma**2)-math.log(sigma**2)/2
+        l2=-(intercept + np.dot(x, np.vstack((np.flipud(phi),np.array([-1.0])))))**2/2/(sigma**2)-math.log(sigma**2)/2-math.log(2*math.pi)/2
         self.assertEqual(l1,l2[0])
 
     def testARgrad1(self):
