@@ -183,10 +183,11 @@ class MA(base):
         """Derive autocorrelation for likelihood function"""
         autocov = np.zeros((lag+1,1))
         temp = sigma**2+np.dot(phi.T,phi)*sigma**2
-        autocov[0]=temp[0,0]
-        for i in range(lag):
-            temp = np.dot(phi[0:lag-i-2].T,phi[i+1:lag-1])*sigma**2
-            autocov[i+1]=temp[0,0]-phi[i]*sigma**2
+        autocov[0]=temp
+        for i in range(lag-1):
+            temp = np.dot(phi[0:lag-i-1].T,phi[i+1:lag])*sigma**2
+            autocov[i+1]=temp-phi[i]*sigma**2
+        autocov[lag]=-phi[lag-1]*sigma**2
 
         """Derive the covariance matrix for likelihood function"""
         covmat=np.zeros((input_dim,input_dim))
@@ -196,7 +197,7 @@ class MA(base):
                     covmat[i,j]=autocov[abs(i-j)]
                     covmat[j,i]=autocov[abs(i-j)]
         
-        loglikelihood -= 0.5*math.log(abs(np.linalg.det(covmat)))+float(1)/2/sigma/sigma*np.matmul(np.matmul(np.transpose(X),inv(autocov)),X)[0,0]
+        loglikelihood -= 0.5*math.log(abs(np.linalg.det(covmat)))+float(1)/2/sigma/sigma*np.matmul(np.matmul(X,np.linalg.inv(covmat)),np.transpose(X))[0,0]
         return loglikelihood
 
     ###################################################################
@@ -236,5 +237,8 @@ def plot_price_pred_vs_true (X, Y):
     plt.plot(Y,'r')
     plt.ylabel('stock prices')
     plt.show()
+
+
+
 
 
