@@ -81,6 +81,22 @@ class TestTrading(unittest.TestCase):
         w = np.array([[3.0, 3.0, 5.0, 7.0, 9.0, 10.0, 16.0, 16.0, 20.0, 20.0, 8.0, 4.0]])
         np.testing.assert_array_almost_equal(z,w)
 
+    ###################################################################
+
+    def testTrade1(self):
+        """test trade with a very simple model"""
+        AR_model = model.AR(lag=1, phi=np.array([[1.0]]), sigma=0.1, intercept=0.0)
+        """historical prices"""
+        x = np.array([[1.0, 3.0, 5.0, 7.0, 1.0, 2.0]])
+        """future prices"""
+        y = np.array([[1.0, 2.6, 1.7, 3.0]])
+        n = 4
+        window = 3 
+        """trading profits"""
+        z = trading.trade(x, y, AR_model, n, window)
+        w = np.array([[1.0, 2.6, 1.7, 1.7]])
+        np.testing.assert_array_almost_equal(z,w)
+
 
 if __name__ == "__main__":
     unittest.main()
