@@ -110,6 +110,7 @@ void c_arch1_gen(double *array, double a0, double a1, int time_, int num, int bu
 				temp = a1 * array[index-1] * array[index-1] +a0;
 				array[index] = sqrt(temp) * randn();
 			}
+			++index;
 		}
 	}
 
@@ -127,7 +128,7 @@ void c_garch11_gen(double * array, double a, double b, double c, const int time_
 
 	int T = time_ + burnin;
 	int index = 0;
-	double temp[T] =0;
+	double temp[T] ;
 	for ( int i =0; i < num; i++){
 		for(int j =0; j < T; j++){
 			temp[j] = 0;
@@ -142,6 +143,7 @@ void c_garch11_gen(double * array, double a, double b, double c, const int time_
 				temp[j] = a + b * array[index-1] * array[index-1] + c * temp[j-1];
 				array[index] = sqrt(temp[j]) * randn();
 			}
+			++index;
 		}
 	}
 

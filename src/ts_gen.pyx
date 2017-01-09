@@ -44,7 +44,7 @@ cdef extern void c_arch1_gen(double *array, double a0, double a1, int time, int 
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def arch1_gen(double a0, double a1, int time_, int num, int burnin):
+def arch1_gen(double a0, double a1, int time, int num, int burnin):
     """
     generate ARCH(1) data
     """
@@ -60,7 +60,7 @@ cdef extern void c_garch11_gen(double * array, double a, double b, double c, con
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def garch11_gen(double a, double b, const int time_, const int num, const int burnin ):
+def garch11_gen(double a, double b, double c, const int time, const int num, const int burnin ):
     """ generate data from GARCH(1,1) model
     """
 
