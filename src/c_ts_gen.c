@@ -36,7 +36,7 @@ double randn()
 }
 
 /* a simple AR(1) model */
-void c_ar1_gen(double * array, double rho, double sigma, int time_, int num, int burnin){
+void c_ar1_gen(double * array, const double rho, const double sigma, const int time_, const int num, const  int burnin){
   /*
   simulate data from AR(1) model: y_t = \rho * y_{t-1} + e_t, where
   e_t is Gaussian with variance sigma^2,
@@ -67,11 +67,39 @@ void c_ar1_gen(double * array, double rho, double sigma, int time_, int num, int
     }
 }
 
+void c_ma1_gen(double * array, const double rho, const double constant, const int time_, const int num, const int burnin ){
+	/* simulate data from MA1 model
+	X_t = constant + e_t + \rho * e_{t-1}, where e_t is a sequence of white noise*/
+
+	int T = time_ + burnin;
+	int index = 0;
+	double white_noise[T];
+	for( int i =0; i<num; ++i){
+		// first generate a sequnce of white noise
+		for (int j=0; j<T; ++j){
+			white_noise[j] = randn();
+		}
+		for( int j=0; j< T; ++j){
+			if( j==0 ){
+					array[index] = white_noise[0] + constant;
+			}
+			else{
+				array[index] = constant + white_noise[j] +rho * white_noise[j-1];
+			}
+			++index;
+		}
+	}
+}
+
+
+
+
+
 
 
 /*  simulate data from ARMA model */
 
-void c_arma_gen(double * array, double* ar, int p, double * ma, int q,double sigma, int time_, int num, int burnin ){
+void c_arma_gen(double * array, double* ar, int p, const double * ma, const int q, const double sigma, const int time_, const int num, const int burnin ){
 
   /*
   simulate data from one dimensional ARMA model:
@@ -117,7 +145,7 @@ void c_arma_gen(double * array, double* ar, int p, double * ma, int q,double sig
             temp = temp + ar[k] * array[index-1-k];
           }
           if(k < q){
-            temp = temp + ma[k] * noise[j -k-1]
+            temp = temp + ma[k] * noise[j -k-1];
           }
         }
         array[index] = temp;
@@ -125,6 +153,28 @@ void c_arma_gen(double * array, double* ar, int p, double * ma, int q,double sig
       ++index;
     }
   }
+
+
+}
+
+
+
+void c_garch_gen(double * array, double * constant, double* garch, int p, double * arch, int q,double sigma, int time_, int num, int burnin ){
+	/* simulate data from Garch model, which is specified by
+	X_t = e_t * sqrt( h_t),
+	where e_t is the standard_noise,
+	and h_t = a_0 + \sum_{i=1}^q alpha_i e_{t-i}^2 + \sum _{i=1}^p \beta_i h_{t-i}
+	alpha_i: Arch coefficients, beta_i: Garch coefficients
+
+	Input:
+	array: pointer to where the data is stored,
+	constant: a_0,
+	garch: double array with length p, coefficients of beta
+	arch: double array with length q, coefficients of alpha
+	*/
+
+
+
 
 
 }

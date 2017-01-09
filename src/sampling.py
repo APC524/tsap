@@ -1,6 +1,6 @@
 # sample simulated data from AR, MA, VAR models
 
-def ar_gen( lag, num_data, time):
+def arma_gen( lag, num_data, time):
 """ generate simulated data from AR model
     lag is an array that contains the coefficients of the autoregressive model
     for AR(p) model, we consider
@@ -16,7 +16,3 @@ def ar_gen( lag, num_data, time):
         The reason we store the model parameters is to evaluate the performance of estimation
 
 """
-
-
-
-
