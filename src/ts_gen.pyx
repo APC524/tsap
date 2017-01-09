@@ -38,3 +38,34 @@ def ma1_gen( double rho, double constant,  int time,  int num,  int burnin ):
     c_ma1_gen(&data[0,0], rho, constant, time, num, burnin)
     out = data[:, burnin: ]
     return out
+
+
+cdef extern void c_arch1_gen(double *array, double a0, double a1, int time, int num, int burnin)
+
+@cython.boundscheck(False)
+@cython.wraparound(False)
+def arch1_gen(double a0, double a1, int time_, int num, int burnin):
+    """
+    generate ARCH(1) data
+    """
+
+    cdef np.ndarray[double, ndim=2, mode="c"] data = np.zeros( (num, time + burnin))
+
+    c_arch1_gen(&data[0,0], a0, a1, time, num, burnin)
+    out = data[:, burnin:]
+    return out
+
+
+cdef extern void c_garch11_gen(double * array, double a, double b, double c, const int time_, const int num, const int burnin )
+
+@cython.boundscheck(False)
+@cython.wraparound(False)
+def garch11_gen(double a, double b, const int time_, const int num, const int burnin ):
+    """ generate data from GARCH(1,1) model
+    """
+
+    cdef np.ndarray[double, ndim=2, mode="c"] data = np.zeros( (num, time + burnin))
+
+    c_garch11_gen(&data[0,0], a, b, c, time, num, burnin)
+    out = data[:, burnin:]
+    return out

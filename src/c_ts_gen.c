@@ -92,9 +92,61 @@ void c_ma1_gen(double * array, const double rho, const double constant, const in
 }
 
 
+void c_arch1_gen(double *array, double a0, double a1, int time_, int num, int burnin){
+	/* simulate data from arch model
+	X_t = e_t * sqrt{ h_t}
+	h_t = a_0 + a_1 * X_{t-1}^2
+	*/
+
+	int T = time_ + burnin;
+	int index = 0;
+	double temp;
+	for ( int i =0; i < num; i++){
+		for(int j =0; j < T; j++){
+			if (j ==0){
+					array[index] = sqrt(a0) * randn();
+			}
+			else{
+				temp = a1 * array[index-1] * array[index-1] +a0;
+				array[index] = sqrt(temp) * randn();
+			}
+		}
+	}
+
+}
 
 
 
+
+void c_garch11_gen(double * array, double a, double b, double c, const int time_, const int num, const int burnin ){
+
+	/* simulate data from garch(1,1) model
+	X_t = e_t * h_t,
+	h_t = a + b * X_{t-1}^2 + c * h_{t-1}
+	*/
+
+	int T = time_ + burnin;
+	int index = 0;
+	double temp[T] =0;
+	for ( int i =0; i < num; i++){
+		for(int j =0; j < T; j++){
+			temp[j] = 0;
+		}
+
+		for(int j =0; j < T; j++){
+			if (j ==0){
+					temp[j] = a;
+					array[index] = sqrt( temp[j])* randn();
+			}
+			else{
+				temp[j] = a + b * array[index-1] * array[index-1] + c * temp[j-1];
+				array[index] = sqrt(temp[j]) * randn();
+			}
+		}
+	}
+
+
+}
 
 
 /*  simulate data from ARMA model */
