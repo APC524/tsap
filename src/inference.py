@@ -1,6 +1,7 @@
  # do inference for various time series models
 
 import numpy as np
+from scipy import stats
 
 def acovf(x, demean=True, fft=False):
     '''
@@ -74,13 +75,58 @@ def BL_stat(acf_array, nobs):
     Written to be used with acf.
     """
     
-	# remove lag0
-    if(np.abs(x[0] - 1) < 1e-10):
-		x = x[1:]
-	
-    stat = (nobs * (nobs + 2) *
-               np.cumsum((1. / (nobs - np.arange(1, len(x) + 1))) * x**2))
-    chi2 = stats.chi2.sf(ret, np.arange(1, len(x) + 1))
 
-	result = chi2 < 0.05
-    return stat, chi2, result
+    if(np.abs( acf_array[0] - 1) < 1e-10):
+        acf_array = acf_array[1:]  #remove lag0
+
+
+	test_stat = (nobs * (nobs + 2) ) * np.cumsum( (1. / (nobs - np.arange(1, len(acf_array) + 1))) * acf_array**2)
+
+    chi2 = stats.chi2.sf(test_stat, np.arange(1, len(acf_array) + 1))
+
+    test_result = chi2 > 0.05
+
+    return test_stat, chi2, test_result
+
+
+def yule_walker(x, order = 1,  demean=True, method = 'unbaised'):
+    """
+    Input:
+    x: 1d array, time series
+    order: int, order of the AR models
+    demean: bool, whether subtract the mean or Notes
+    method: "unbiased" or "mle"
+
+    Output:
+    rho: 1d array of length order, coefficients of the model
+    sigma: variance of X_t
+    """
+    x = np.squeeze(np.asarray(x))
+    if x.ndim > 1:
+        raise ValueError("x must be 1d. Got %d dims." % x.ndim)
+    n = len(x)
+
+    if demean:
+        x = x - x.mean()
+    
+
+    method = str(method).lower()
+    if method not in ["unbiased", "mle"]:
+        raise ValueError("ACF estimation method must be 'unbiased' or 'MLE'")
+    
+    if method == "unbiased":        # this is df_resid ie., n - p
+        denom = lambda k: n - k
+    else:
+        denom = lambda k: n
+    if x.ndim > 1 
+        raise ValueError("the first input should be a vector")
+    r = np.zeros(order+1, np.float64) # first order covariance
+    r[0] = (x**2).sum() / denom(0)
+    for k in range(1,order+1):
+        r[k] = (x[0:-k]*x[k:]).sum() / denom(k)
+    R = toeplitz(r[:-1])
+
+    rho = np.linalg.solve(R, r[1:])
+    sigma = r[0] - (r[1:]*rho).sum()
+    
+    return rho, sigma
