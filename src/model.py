@@ -75,7 +75,7 @@ class AR(base):
 
         loglikelihood = loglikelihood / (2 * sigma**2)
         loglikelihood += (lag - input_dim) / 2.0 * math.log(sigma**2)
-        #wenyan
+
         loglikelihood -= (input_dim-lag)/2.0 * math.log(2*math.pi)
         grad_phi = grad_phi / (sigma**2)
         grad_intercept = grad_intercept / (sigma**2)
@@ -157,12 +157,20 @@ class MA(base):
     ###################################################################
 
     def loss(self, X, lag=None, phi=None, sigma=None, intercept=None):
+        if lag is None:  
+            lag = self._lag  
+        if phi is None:  
+            phi = self.params['phi']
+        if sigma is None:
+            sigma = self.params['sigma']
+        if intercept is None:
+            intercept = self.params['intercept']
         loglikelihood = self.get_loglikelihood(X, lag=lag, phi=phi, sigma=sigma, intercept=intercept)
         """grad_phi is a column vector"""
         grads = {} 
-        grads['phi'] = eval_numerical_gradient_array(lambda phi: self.get_loglikelihood(X, lag,phi,sigma,intercept)[0], phi, 1)   
-        grads['intercept'] = eval_numerical_gradient_array(lambda intercept: self.get_loglikelihood(X, lag,phi,sigma,intercept)[0], intercept, 1)
-        grads['sigma'] = eval_numerical_gradient_array(lambda sigma: self.get_loglikelihood(X, lag,phi,sigma,intercept)[0], sigma, 1)
+        grads['phi'] = eval_numerical_gradient_array(lambda phi: self.get_loglikelihood(X, lag,phi,sigma,intercept), phi, 1)   
+        grads['intercept'] = eval_numerical_gradient_array(lambda intercept: self.get_loglikelihood(X, lag,phi,sigma,intercept), intercept, 1)
+        grads['sigma'] = eval_numerical_gradient_array(lambda sigma: self.get_loglikelihood(X, lag,phi,sigma,intercept), sigma, 1)
         return loglikelihood, grads
 
     def get_loglikelihood(self, X, lag=None, phi=None, sigma=None, intercept=None):
@@ -183,7 +191,7 @@ class MA(base):
         """initialization"""
         loglikelihood = 0
 
-        loglikelihood=-input_dim/2*math.log(2*math.pi*sigma**2)
+        loglikelihood=-float(input_dim)/2*math.log(2*math.pi*sigma**2)
 
         """Derive autocorrelation for likelihood function"""
         autocov = np.zeros((lag+1,1))
@@ -203,7 +211,7 @@ class MA(base):
                     covmat[j,i]=autocov[abs(i-j)]
         
         loglikelihood -= 0.5*math.log(abs(np.linalg.det(covmat)))+1.0/2/sigma/sigma*np.matmul(np.matmul(X,np.linalg.inv(covmat)),np.transpose(X))[0,0]
-        return loglikelihood
+        return -loglikelihood
 
     ###################################################################
         
