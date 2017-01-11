@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['tsap',['tsap',['../md__u_qingcanw_Programs_tsap_README.html',1,'']]],
+  ['time_20series_20analysis_20in_20python',['Time Series Analysis in Python',['../md__u_qingcanw_Programs_tsap_README.html',1,'']]],
   ['testdataprocessor',['TestDataProcessor',['../classtest_1_1testdataprocessor_1_1TestDataProcessor.html',1,'test::testdataprocessor']]],
   ['testgetindicator1',['testGetIndicator1',['../classtest_1_1testdataprocessor_1_1TestDataProcessor.html#a8eb1635599669ec61f398acdef228665',1,'test::testdataprocessor::TestDataProcessor']]],
   ['testgetindicator2',['testGetIndicator2',['../classtest_1_1testdataprocessor_1_1TestDataProcessor.html#af49bbac371e28db7d98504e7ede06cca',1,'test::testdataprocessor::TestDataProcessor']]],
