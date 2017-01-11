@@ -65,19 +65,19 @@ class AR(base):
         for i in range(input_dim - lag):
             """np.flipud can flip the vector"""
             temp = intercept + np.dot(X[0,i:(i+lag+1)], np.vstack((np.flipud(phi),-1.0)))
-            loglikelihood -= float(temp)**2
-            grad_phi -= float(temp) * (np.fliplr(np.matrix(X[0,i:(i+lag)]))).T
-            grad_intercept -= float(temp)
-            grad_sigma += float(temp)**2
+            loglikelihood -= temp**2
+            grad_phi -= temp * (np.fliplr(np.matrix(X[0,i:(i+lag)]))).T
+            grad_intercept -= temp
+            grad_sigma += temp**2
 
-        loglikelihood = float(loglikelihood) / (2 * sigma**2)
-        loglikelihood += float(lag - input_dim) / 2 * math.log(sigma**2)
+        loglikelihood = loglikelihood / (2 * sigma**2)
+        loglikelihood += (lag - input_dim) / 2.0 * math.log(sigma**2)
         #wenyan
-        loglikelihood-=float(input_dim-lag)/2*math.log(2*math.pi)
+        loglikelihood -= (input_dim-lag)/2.0 * math.log(2*math.pi)
         grad_phi = grad_phi / (sigma**2)
         grad_intercept = grad_intercept / (sigma**2)
         grad_sigma = grad_sigma / (sigma**3)
-        grad_sigma += (lag - input_dim) / (sigma)
+        grad_sigma += (lag - input_dim) / sigma
 
         """grad_phi is a column vector"""
         grads = {} 
@@ -199,7 +199,7 @@ class MA(base):
                     covmat[i,j]=autocov[abs(i-j)]
                     covmat[j,i]=autocov[abs(i-j)]
         
-        loglikelihood -= 0.5*math.log(abs(np.linalg.det(covmat)))+float(1)/2/sigma/sigma*np.matmul(np.matmul(X,np.linalg.inv(covmat)),np.transpose(X))[0,0]
+        loglikelihood -= 0.5*math.log(abs(np.linalg.det(covmat)))+1.0/2/sigma/sigma*np.matmul(np.matmul(X,np.linalg.inv(covmat)),np.transpose(X))[0,0]
         return loglikelihood
 
     ###################################################################
