@@ -1,0 +1,78 @@
+\hypertarget{classsrc_1_1cluster_1_1Cluster}{}\section{src.\+cluster.\+Cluster Class Reference}
+\label{classsrc_1_1cluster_1_1Cluster}\index{src.\+cluster.\+Cluster@{src.\+cluster.\+Cluster}}
+Inheritance diagram for src.\+cluster.\+Cluster\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classsrc_1_1cluster_1_1Cluster}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{classsrc_1_1cluster_1_1Cluster_aecb660a329d008897008ccb17a49f349}{\+\_\+\+\_\+init\+\_\+\+\_\+} (self, X)
+\item 
+def \hyperlink{classsrc_1_1cluster_1_1Cluster_a8cb50b6db992f7a5c686c0d00fb2343a}{assign\+\_\+label} (self, Centers)
+\item 
+def \hyperlink{classsrc_1_1cluster_1_1Cluster_afd29b7a67da864dbc7b8352e8ed0cdab}{k\+Means} (self, n\+Clusters, max\+Iter=300)
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classsrc_1_1cluster_1_1Cluster_aecb660a329d008897008ccb17a49f349}\label{classsrc_1_1cluster_1_1Cluster_aecb660a329d008897008ccb17a49f349}} 
+\index{src\+::cluster\+::\+Cluster@{src\+::cluster\+::\+Cluster}!\+\_\+\+\_\+init\+\_\+\+\_\+@{\+\_\+\+\_\+init\+\_\+\+\_\+}}
+\index{\+\_\+\+\_\+init\+\_\+\+\_\+@{\+\_\+\+\_\+init\+\_\+\+\_\+}!src\+::cluster\+::\+Cluster@{src\+::cluster\+::\+Cluster}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+init\+\_\+\+\_\+()}{\_\_init\_\_()}}
+{\footnotesize\ttfamily def src.\+cluster.\+Cluster.\+\_\+\+\_\+init\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{X }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Return a new object to cluster data based on selected clutering
+algorithm.
+Example usage: clusterObj = Clustering(X)
+X:     numpy array, shape (n_samples, n_features)\end{DoxyVerb}
+ 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classsrc_1_1cluster_1_1Cluster_a8cb50b6db992f7a5c686c0d00fb2343a}\label{classsrc_1_1cluster_1_1Cluster_a8cb50b6db992f7a5c686c0d00fb2343a}} 
+\index{src\+::cluster\+::\+Cluster@{src\+::cluster\+::\+Cluster}!assign\+\_\+label@{assign\+\_\+label}}
+\index{assign\+\_\+label@{assign\+\_\+label}!src\+::cluster\+::\+Cluster@{src\+::cluster\+::\+Cluster}}
+\subsubsection{\texorpdfstring{assign\+\_\+label()}{assign\_label()}}
+{\footnotesize\ttfamily def src.\+cluster.\+Cluster.\+assign\+\_\+label (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{Centers }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Assign labels to the data points
+    Input:
+self
+Centers:  numpy array, shape (n_clusters, n_features) the centers of each cluster
+    Output:
+clusters: the index of data points in each class
+labels: the label of each class\end{DoxyVerb}
+ \mbox{\Hypertarget{classsrc_1_1cluster_1_1Cluster_afd29b7a67da864dbc7b8352e8ed0cdab}\label{classsrc_1_1cluster_1_1Cluster_afd29b7a67da864dbc7b8352e8ed0cdab}} 
+\index{src\+::cluster\+::\+Cluster@{src\+::cluster\+::\+Cluster}!k\+Means@{k\+Means}}
+\index{k\+Means@{k\+Means}!src\+::cluster\+::\+Cluster@{src\+::cluster\+::\+Cluster}}
+\subsubsection{\texorpdfstring{k\+Means()}{kMeans()}}
+{\footnotesize\ttfamily def src.\+cluster.\+Cluster.\+k\+Means (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{n\+Clusters,  }\item[{}]{max\+Iter = {\ttfamily 300} }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}K-means clustering algorithm.
+
+Function usage: kMeans(nClusters, maxIter, nInit)
+
+Inputs:
+nClusters : int
+    The number of clusters to form as well as the number of
+    centroids to generate.
+maxIter : int, optional, default 300
+    Maximum number of iterations of the k-means algorithm to run.
+
+Returns:
+centroid :  float ndarray with shape (k, n_features)
+    Centroids found at the last iteration of k-means.
+label : integer ndarray with shape (n_samples,)
+    label[i] is the code or index of the centroid the i’th
+    observation is closest to.
+inertia : float
+    The final value of the inertia criterion (sum of squared
+    distances to the closest centroid for all observations
+    in the training set).\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/u/qingcanw/\+Programs/tsap/src/cluster.\+py\end{DoxyCompactItemize}

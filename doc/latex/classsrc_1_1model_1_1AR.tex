@@ -1,0 +1,79 @@
+\hypertarget{classsrc_1_1model_1_1AR}{}\section{src.\+model.\+AR Class Reference}
+\label{classsrc_1_1model_1_1AR}\index{src.\+model.\+AR@{src.\+model.\+AR}}
+Inheritance diagram for src.\+model.\+AR\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classsrc_1_1model_1_1AR}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{classsrc_1_1model_1_1AR_a943f799da7cba763b29778ba12481c64}{\+\_\+\+\_\+init\+\_\+\+\_\+} (self, lag, phi, sigma, intercept)
+\item 
+def \hyperlink{classsrc_1_1model_1_1AR_ae6095b1c295bdbd6dddd0b1fa87948ef}{loss} (self, X, lag=None, phi=None, sigma=None, intercept=None)
+\item 
+def \hyperlink{classsrc_1_1model_1_1AR_a2a2f41f1e5cfb10f0c5680ea689e1994}{predict} (self, X, nstep, lag=None, phi=None, sigma=None, intercept=None)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsrc_1_1model_1_1AR_a4ba754929f5fa9b24a5b6653d7b62411}\label{classsrc_1_1model_1_1AR_a4ba754929f5fa9b24a5b6653d7b62411}} 
+{\bfseries params}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyVerb}class AR implements the AR model which has __init__ , loss and predict as functions\end{DoxyVerb}
+ 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classsrc_1_1model_1_1AR_a943f799da7cba763b29778ba12481c64}\label{classsrc_1_1model_1_1AR_a943f799da7cba763b29778ba12481c64}} 
+\index{src\+::model\+::\+AR@{src\+::model\+::\+AR}!\+\_\+\+\_\+init\+\_\+\+\_\+@{\+\_\+\+\_\+init\+\_\+\+\_\+}}
+\index{\+\_\+\+\_\+init\+\_\+\+\_\+@{\+\_\+\+\_\+init\+\_\+\+\_\+}!src\+::model\+::\+AR@{src\+::model\+::\+AR}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+init\+\_\+\+\_\+()}{\_\_init\_\_()}}
+{\footnotesize\ttfamily def src.\+model.\+A\+R.\+\_\+\+\_\+init\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{lag,  }\item[{}]{phi,  }\item[{}]{sigma,  }\item[{}]{intercept }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}__init__: initialize the model with lag phi sigma and intercept
+   Input: 
+ lag: the number of lag in AR model, dimension 1
+ phi: the coefficients for each lag, dimension lag, column vector
+ sigma: the standard deviation of the error term, dimension 1
+ intercept: the constant component in the AR model, dimension 1
+   Output:
+ _lag: the number of lag in the AR model
+ params: hash table of phi, sigma and intercept\end{DoxyVerb}
+ 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classsrc_1_1model_1_1AR_ae6095b1c295bdbd6dddd0b1fa87948ef}\label{classsrc_1_1model_1_1AR_ae6095b1c295bdbd6dddd0b1fa87948ef}} 
+\index{src\+::model\+::\+AR@{src\+::model\+::\+AR}!loss@{loss}}
+\index{loss@{loss}!src\+::model\+::\+AR@{src\+::model\+::\+AR}}
+\subsubsection{\texorpdfstring{loss()}{loss()}}
+{\footnotesize\ttfamily def src.\+model.\+A\+R.\+loss (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{X,  }\item[{}]{lag = {\ttfamily None},  }\item[{}]{phi = {\ttfamily None},  }\item[{}]{sigma = {\ttfamily None},  }\item[{}]{intercept = {\ttfamily None} }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}loss: return the loglikelihood and its gradient with respect to phi, sigma and intercept
+   Input: 
+ X: the input time series, each row is about one stock. For one stock, X is a row vector. Note phi is a column vector
+   Output:
+  loglikelihood: the loglikelihood that calculated from the input time series
+  grads: hash table that records the gradient of phi sigma and intercept\end{DoxyVerb}
+\begin{DoxyVerb}the number of samples, usually it's about how many stocks we have \end{DoxyVerb}
+ \mbox{\Hypertarget{classsrc_1_1model_1_1AR_a2a2f41f1e5cfb10f0c5680ea689e1994}\label{classsrc_1_1model_1_1AR_a2a2f41f1e5cfb10f0c5680ea689e1994}} 
+\index{src\+::model\+::\+AR@{src\+::model\+::\+AR}!predict@{predict}}
+\index{predict@{predict}!src\+::model\+::\+AR@{src\+::model\+::\+AR}}
+\subsubsection{\texorpdfstring{predict()}{predict()}}
+{\footnotesize\ttfamily def src.\+model.\+A\+R.\+predict (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{X,  }\item[{}]{nstep,  }\item[{}]{lag = {\ttfamily None},  }\item[{}]{phi = {\ttfamily None},  }\item[{}]{sigma = {\ttfamily None},  }\item[{}]{intercept = {\ttfamily None} }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}predict: return the predicted series based on the samples given
+   Input: 
+ X: the input time series, each row is about one stock. For one stock, X is a row vector. Note phi is a column vector
+ nstep: the number of steps to predict
+   Output:
+  pred_state: the predicted series based on AR model, which is a row vector\end{DoxyVerb}
+\begin{DoxyVerb}parameters\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/u/qingcanw/\+Programs/tsap/src/model.\+py\end{DoxyCompactItemize}
