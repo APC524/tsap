@@ -81,11 +81,11 @@ class AR(base):
 
         """grad_phi is a column vector"""
         grads = {} 
-        grads['phi'] = grad_phi   
-        grads['intercept'] = grad_intercept 
-        grads['sigma'] = grad_sigma
+        grads['phi'] = -grad_phi   
+        grads['intercept'] = -grad_intercept 
+        grads['sigma'] = -grad_sigma
 
-        return loglikelihood, grads
+        return -loglikelihood, grads
 
     ###################################################################
 
@@ -154,14 +154,6 @@ class MA(base):
     ###################################################################
 
     def loss(self, X, lag=None, phi=None, sigma=None, intercept=None):
-        if lag is None:  
-            lag = self._lag  
-        if phi is None:  
-            phi = self.params['phi']
-        if sigma is None:
-            sigma = self.params['sigma']
-        if intercept is None:
-            intercept = self.params['intercept']
         loglikelihood = self.get_loglikelihood(X, lag=lag, phi=phi, sigma=sigma, intercept=intercept)
         """grad_phi is a column vector"""
         grads = {} 
@@ -208,7 +200,7 @@ class MA(base):
                     covmat[j,i]=autocov[abs(i-j)]
         
         loglikelihood -= 0.5*math.log(abs(np.linalg.det(covmat)))+float(1)/2/sigma/sigma*np.matmul(np.matmul(X,np.linalg.inv(covmat)),np.transpose(X))[0,0]
-        return loglikelihood, 0
+        return loglikelihood
 
     ###################################################################
         
