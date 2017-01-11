@@ -81,11 +81,11 @@ class AR(base):
 
         """grad_phi is a column vector"""
         grads = {} 
-        grads['phi'] = grad_phi   
-        grads['intercept'] = grad_intercept 
-        grads['sigma'] = grad_sigma
+        grads['phi'] = -grad_phi   
+        grads['intercept'] = -grad_intercept 
+        grads['sigma'] = -grad_sigma
 
-        return loglikelihood, grads
+        return -loglikelihood, grads
 
     ###################################################################
 

@@ -2,6 +2,7 @@
 
 import numpy as np
 from scipy import stats
+import scipy
 
 def acovf(x, demean=True, fft=False):
     '''
@@ -18,7 +19,7 @@ def acovf(x, demean=True, fft=False):
     acovf : array
         autocovariance function
     '''
-	# the input might be a n by one matrix 
+	# the input might be a n by one matrix
     x = np.squeeze(np.asarray(x))
     if x.ndim > 1:
         raise ValueError("x must be 1d. Got %d dims." % x.ndim)
@@ -28,11 +29,11 @@ def acovf(x, demean=True, fft=False):
         xc = x - x.mean()
     else:
         xc = x
-    
-	# denominator 
+
+	# denominator
     a = np.arange(1, n + 1)
     d = np.hstack((a, a[:-1][::-1]))
-    
+
     if fft:
         nobs = len(xc)
         Frf = np.fft.fft(xc, n=nobs * 2)
@@ -61,7 +62,7 @@ def BL_stat(acf_array, nobs):
 	Input:
     acf_array : an array of acf_functions
     nobs : int
-        Number of observations in the entire sample 
+        Number of observations in the entire sample
 
   	Output:
     -------
@@ -69,12 +70,12 @@ def BL_stat(acf_array, nobs):
         Ljung-Box Q-statistic for autocorrelation parameters
     p-value : array
         P-value of the Q statistic
-	result: 
+	result:
     Notes
     ------
     Written to be used with acf.
     """
-    
+
 
     if(np.abs( acf_array[0] - 1) < 1e-10):
         acf_array = acf_array[1:]  #remove lag0
@@ -108,25 +109,25 @@ def yule_walker(x, order = 1,  demean=True, method = 'unbaised'):
 
     if demean:
         x = x - x.mean()
-    
+
 
     method = str(method).lower()
     if method not in ["unbiased", "mle"]:
         raise ValueError("ACF estimation method must be 'unbiased' or 'MLE'")
-    
+
     if method == "unbiased":        # this is df_resid ie., n - p
         denom = lambda k: n - k
     else:
         denom = lambda k: n
-    if x.ndim > 1 
+    if x.ndim > 1:
         raise ValueError("the first input should be a vector")
     r = np.zeros(order+1, np.float64) # first order covariance
     r[0] = (x**2).sum() / denom(0)
     for k in range(1,order+1):
         r[k] = (x[0:-k]*x[k:]).sum() / denom(k)
-    R = toeplitz(r[:-1])
+    R = scipy.linalg.toeplitz(r[:-1])
 
     rho = np.linalg.solve(R, r[1:])
     sigma = r[0] - (r[1:]*rho).sum()
-    
+
     return rho, sigma
