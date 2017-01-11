@@ -9,7 +9,7 @@ doc/latex/
 # Temporary files
 tmp*
 test/*.ipynb
-.ipynb_checkpoints/
+*checkpoint*
 
 # System files
 .DS_Store
