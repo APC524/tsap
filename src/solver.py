@@ -79,8 +79,8 @@ class Solver(object):
     print num_iterations
     for t in xrange(num_iterations):
       self._step()
-      # if t >= 3 and self.loss_history[-1] > self.loss_history[-2]:
-        # break
+      if t >= 3 and (self.loss_history[-2] - self.loss_history[-1]) < 1e-4:
+        break
       if (t+1) % self.print_every == 0:
         print "the loss is %f" % (self.loss_history[-1])
 
