@@ -8,6 +8,7 @@ doc/latex/
 
 # Temporary files
 tmp*
+test/*.ipynb
 
 # System files
 .DS_Store
