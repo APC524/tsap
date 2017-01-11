@@ -75,7 +75,7 @@ class AR(base):
 
         loglikelihood = loglikelihood / (2 * sigma**2)
         loglikelihood += (lag - input_dim) / 2.0 * math.log(sigma**2)
-        #wenyan
+
         loglikelihood -= (input_dim-lag)/2.0 * math.log(2*math.pi)
         grad_phi = grad_phi / (sigma**2)
         grad_intercept = grad_intercept / (sigma**2)
