@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Doxygen files
+doc/latex/
+
 # Temporary files
 tmp*
 
