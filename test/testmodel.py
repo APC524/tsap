@@ -91,15 +91,15 @@ class TestModel(unittest.TestCase):
         self.assertAlmostEqual(g1['sigma'],g2['sigma'])
 
     def testMAloglklh1(self):
-        mod=model.MA(lag=1,phi=np.array([0.98]),sigma=1,intercept=2)
+        mod=model.MA(lag=1,phi=np.array([0.98]),sigma=1.0,intercept=2)
         x=np.zeros((1,2))
         x[0,0]=99
         x[0,1]=100
-        l1=mod.loss(x)
+        l1=mod.loss(x)[0]
         phi=np.array([0.98])
-        sigma=1
+        sigma=1.0
         T=2
-        intercept=2
+        intercept=2.0
 
         l2=-math.log(2*math.pi*sigma**2)
 
@@ -120,24 +120,25 @@ class TestModel(unittest.TestCase):
         self.assertEqual(l1, l2)
 
     def testMAloglklh2(self):
-        mod=model.MA(lag=2,phi=np.array([[1.01],[1.02]]),sigma=1,intercept=2)
+        mod=model.MA(lag=2,phi=np.array([[1.01],[1.02]]),sigma=1.0,intercept=2.0)
         x=np.zeros((1,3))
         x[0,0]=98
         x[0,1]=99
         x[0,2]=100
-        l1=mod.loss(x)
+        l1=mod.loss(x)[0]
+        lag=2
         phi=np.array([[1.01],[1.02]])
-        sigma=1
-        T=3
-        intercept=2
+        sigma=1.0
+        T=3.0
+        intercept=2.0
 
         l2=-float(3)/2*math.log(2*math.pi*sigma**2)
 
         """Derive autocorrelation for likelihood function"""
         autocov = np.zeros((3,1))
-        autocov[0]=sigma**2+np.dot(phi,phi)*sigma**2[0,0]
+        autocov[0]=sigma**2+np.dot(phi.T,phi)*sigma**2
         for i in range(2):
-                autocov[i+1]=np.dot(phi[0:lag-i-2],phi[i+1:lag-1])*sigma**2[0,0]-phi[i]*sigma**2
+                autocov[i+1]=np.dot(phi[0:lag-i-1].T,phi[i+1:lag])*sigma**2-phi[i]*sigma**2
 
         """Derive the covariance matrix for likelihood function"""
         covmat=np.zeros((3,3))
@@ -147,7 +148,7 @@ class TestModel(unittest.TestCase):
                     covmat[i,j]=autocov[abs(i-j)]
                     covmat[j,i]=autocov[abs(i-j)]
         
-        l2 -= 0.5*math.log(abs(np.linalg.det(covmat)))+float(1)/2/sigma/sigma*np.matmul(np.matmul(np.transpose(x),np.linalg.inv(covmat)),x)[0,0]
+        l2 -= 0.5*math.log(abs(np.linalg.det(covmat)))+float(1)/2/sigma/sigma*np.matmul(np.matmul(x,np.linalg.inv(covmat)),np.transpose(x))[0,0]
         self.assertEqual(l1,l2)
 
 
