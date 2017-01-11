@@ -3,7 +3,7 @@ import math
 from basemodel import base
 import matplotlib.pyplot as plt
 from gradient_check import eval_numerical_gradient, eval_numerical_gradient_array
-
+import sys
 
 
 
@@ -65,8 +65,11 @@ class AR(base):
         for i in range(input_dim - lag):
             """np.flipud can flip the vector"""
             temp = intercept + np.dot(X[0,i:(i+lag+1)], np.vstack((np.flipud(phi),-1.0)))
+            
             loglikelihood -= temp**2
-            grad_phi -= temp * (np.fliplr(np.matrix(X[0,i:(i+lag)]))).T
+            
+            grad_phi -= float(temp) * (np.fliplr(np.matrix(X[0,i:(i+lag)]))).T
+            
             grad_intercept -= temp
             grad_sigma += temp**2
 
