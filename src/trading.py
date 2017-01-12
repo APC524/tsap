@@ -129,5 +129,85 @@ def trade(X, Y, M, nstep, window, money = 1.0):
 
 	return profit
 
+def rolltrade(X, M, l, nstep, window, money = 1.0):
+	"""trade: return the profit series. First we are given a fitted model, then we need to use this model 
+	to forecast future returns based on historical returns, which is obtained by transfering historical prices 
+	to historical returns. After that, we again transfer the returns to prices and then generate trading signal 
+	based on predicted price. At last we calculate the profit based on the real price series and the trading signal """
+
+	"""
+		Input: 
+				X: numpy array and row vector. Historical prices.
+				Y: numpy array and row vector. Future prices right after X
+				M: the fitted model from model.py
+				nstep: an integer. How many time steps you want to predict
+				window: an integer. How long we should trade
+				money: a number. Initial wealth
+		Output:
+				profit: numpy array and row vector. profit series indicating how much money you have"""
+
+
+	"""The trading window should not be longer than predicted time steps"""
+	if window > nstep:
+		print "The period should not be longer than the predicted prices !"
+		exit(1)
+
+	"""This is how many data we want to use to train the model"""
+	train_length = l
+
+	"""This is how many future steps we want to predict"""
+	pred_length = nstep
+
+	"""the length of data"""
+	data_length = X.shape[1]
+
+	"""how many predictions you make for the trading"""
+	number_of_pred = int(math.floor((data_length - train_length) / pred_length))
+
+	"""initilization"""
+	signal = np.zeros((1,data_length))
+	profit = money*np.ones((1,data_length))
+	out_pred_price = np.zeros((1,data_length))
+	out_pred_price[0,0:train_length] = X[0,0:train_length]
+
+	flag = 0
+
+	for i in range(number_of_pred):
+
+		"""get the training data"""
+		train = np.array([X[0,i*pred_length:(train_length+i*pred_length)]])
+
+		"""get the future price"""
+		Y = np.array([X[0,(train_length+i*pred_length):(train_length+(i+1)*pred_length)]])
+
+		"""get historical returns based on historical prices"""
+		rt = dp.get_return(train)
+
+		"""predict future returns based on model M"""
+		pred_rt = M.predict(rt, pred_length)
+
+		"""transfer the future returns to future prices"""
+		pred_price = dp.get_price(train[0,train.shape[1]-1], pred_rt)
+
+		"""generate trading signals based on future prices"""
+		temp_signal = signal_generation(pred_price, window)
+
+		"""get the profti time series"""
+		temp_profit = profit_loss(Y, temp_signal, money)
+
+		"""get the terminal money after one trading period"""
+		money = temp_profit[0,-1]
+
+		"""record the profit and signal and predicted prices"""
+		signal[0,(train_length+i*pred_length):(train_length+(i+1)*pred_length)] = temp_signal[0,:]
+		profit[0,(train_length+i*pred_length):(train_length+(i+1)*pred_length)] = temp_profit[0,:]
+		out_pred_price[0,(train_length+i*pred_length):(train_length+(i+1)*pred_length)] = pred_price[0,:]
+
+		flag = i
+
+	profit[0,train_length+(flag+1)*pred_length:] = money
+
+	return profit, signal, out_pred_price
+
 
 
