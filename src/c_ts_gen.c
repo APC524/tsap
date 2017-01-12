@@ -153,7 +153,7 @@ void c_garch11_gen(double * array, double a, double b, double c, const int time_
 
 /*  simulate data from ARMA model */
 
-void c_arma_gen(double * array, double* ar, int p, const double * ma, const int q, const double sigma, const int time_, const int num, const int burnin ){
+void c_arma_gen(double * array, double* ar, int p,   double * ma, const int q, const double sigma, const int time_, const int num, const int burnin ){
 
   /*
   simulate data from one dimensional ARMA model:
@@ -207,28 +207,6 @@ void c_arma_gen(double * array, double* ar, int p, const double * ma, const int 
       ++index;
     }
   }
-
-
-}
-
-
-
-void c_garch_gen(double * array, double * constant, double* garch, int p, double * arch, int q,double sigma, int time_, int num, int burnin ){
-	/* simulate data from Garch model, which is specified by
-	X_t = e_t * sqrt( h_t),
-	where e_t is the standard_noise,
-	and h_t = a_0 + \sum_{i=1}^q alpha_i e_{t-i}^2 + \sum _{i=1}^p \beta_i h_{t-i}
-	alpha_i: Arch coefficients, beta_i: Garch coefficients
-
-	Input:
-	array: pointer to where the data is stored,
-	constant: a_0,
-	garch: double array with length p, coefficients of beta
-	arch: double array with length q, coefficients of alpha
-	*/
-
-
-
 
 
 }
