@@ -191,11 +191,12 @@ class MA(base):
         """initialization"""
         loglikelihood = 0
 
-        loglikelihood=-float(input_dim)/2*math.log(2*math.pi*sigma**2)
+        loglikelihood =- float(input_dim) / 2 * math.log(2*math.pi*sigma**2)
 
         """Derive autocorrelation for likelihood function"""
         autocov = np.zeros((lag+1,1))
-        temp = sigma**2+np.dot(phi.T,phi)*sigma**2
+        temp = sigma**2+ phi.T.dot(phi) * sigma**2
+
         autocov[0]=temp
         if lag>1.0:
             for i in range(lag-1):
@@ -211,7 +212,7 @@ class MA(base):
                     covmat[i,j]=autocov[abs(i-j)]
                     covmat[j,i]=autocov[abs(i-j)]
         
-        loglikelihood -= 0.5*math.log(abs(np.linalg.det(covmat)))+1.0/2/sigma/sigma*np.matmul(np.matmul(X,np.linalg.inv(covmat)),np.transpose(X))[0,0]
+        loglikelihood -= 0.5*math.log(abs(np.linalg.det(covmat)))+ 1.0/(2 * sigma**2) * np.dot(np.dot(X,np.linalg.inv(covmat)),X.T)[0,0]
         return -loglikelihood
 
     ###################################################################
