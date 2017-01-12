@@ -90,7 +90,7 @@ def BL_stat(acf_array, nobs):
     return test_stat, chi2, test_result
 
 
-def yule_walker(x, order = 1,  demean=True, method = 'unbaised'):
+def yule_walker(x, order = 1,  demean=True, method = 'unbiased'):
     """
     Input:
     x: 1d array, time series
@@ -135,97 +135,17 @@ def yule_walker(x, order = 1,  demean=True, method = 'unbaised'):
 
 
 
-def arma_order_select_ic(y, max_ar=4, max_ma=2, ic='bic', trend='c',
-                         model_kw={}, fit_kw={}):
+def ar_select(x, threshold = 0.1, upper = 40, demean_flag=True, fft_flag=False):
+    """ select the AR model
+
+    x: time series data
+    threshold: threshold for selection
+    upper: maximum of the complexity
+
     """
-    Returns information criteria for many ARMA models
 
-    Parameters
-    ----------
-    y : array-like
-        Time-series data
-    max_ar : int
-        Maximum number of AR lags to use. Default 4.
-    max_ma : int
-        Maximum number of MA lags to use. Default 2.
-    ic : str, list
-        Information criteria to report. Either a single string or a list
-        of different criteria is possible.
-    trend : str
-        The trend to use when fitting the ARMA models.
-    model_kw : dict
-        Keyword arguments to be passed to the ``ARMA`` model
-    fit_kw : dict
-        Keyword arguments to be passed to ``ARMA.fit``.
+    acf_array = acf(x, nlags = upper, demean = demean_flag, fft = fft_flag)
 
-    Returns
-    -------
-    obj : Results object
-        Each ic is an attribute with a DataFrame for the results. The AR order
-        used is the row index. The ma order used is the column index. The
-        minimum orders are available as ``ic_min_order``.
-
-    Examples
-    --------
-
-    >>> from statsmodels.tsa.arima_process import arma_generate_sample
-    >>> import statsmodels.api as sm
-    >>> import numpy as np
-
-    >>> arparams = np.array([.75, -.25])
-    >>> maparams = np.array([.65, .35])
-    >>> arparams = np.r_[1, -arparams]
-    >>> maparam = np.r_[1, maparams]
-    >>> nobs = 250
-    >>> np.random.seed(2014)
-    >>> y = arma_generate_sample(arparams, maparams, nobs)
-    >>> res = sm.tsa.arma_order_select_ic(y, ic=['aic', 'bic'], trend='nc')
-    >>> res.aic_min_order
-    >>> res.bic_min_order
-
-    Notes
-    -----
-    This method can be used to tentatively identify the order of an ARMA
-    process, provided that the time series is stationary and invertible. This
-    function computes the full exact MLE estimate of each model and can be,
-    therefore a little slow. An implementation using approximate estimates
-    will be provided in the future. In the meantime, consider passing
-    {method : 'css'} to fit_kw.
-    """
-    from pandas import DataFrame
-
-    ar_range = lrange(0, max_ar + 1)
-    ma_range = lrange(0, max_ma + 1)
-    if isinstance(ic, string_types):
-        ic = [ic]
-    elif not isinstance(ic, (list, tuple)):
-        raise ValueError("Need a list or a tuple for ic if not a string.")
-
-    results = np.zeros((len(ic), max_ar + 1, max_ma + 1))
-
-    for ar in ar_range:
-        for ma in ma_range:
-            if ar == 0 and ma == 0 and trend == 'nc':
-                results[:, ar, ma] = np.nan
-                continue
-
-            mod = _safe_arma_fit(y, (ar, ma), model_kw, trend, fit_kw)
-            if mod is None:
-                results[:, ar, ma] = np.nan
-                continue
-
-            for i, criteria in enumerate(ic):
-                results[i, ar, ma] = getattr(mod, criteria)
-
-    dfs = [DataFrame(res, columns=ma_range, index=ar_range) for res in results]
-
-    res = dict(zip(ic, dfs))
-
-    # add the minimums to the results dict
-    min_res = {}
-    for i, result in iteritems(res):
-        mins = np.where(result.min().min() == result)
-        min_res.update({i + '_min_order' : (mins[0][0], mins[1][0])})
-    res.update(min_res)
-
-    return Bunch(**res)
+    order = np.argmin(  1 * (np.abs( acf_array) > threshold) )- 1
+    
+    return order

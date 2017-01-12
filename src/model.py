@@ -212,7 +212,7 @@ class MA(base):
                     covmat[i,j]=autocov[abs(i-j)]
                     covmat[j,i]=autocov[abs(i-j)]
         
-        loglikelihood -= 0.5*math.log(abs(np.linalg.det(covmat)))+ 1.0/(2 * sigma**2) * np.dot(np.dot(X,np.linalg.inv(covmat)),X.T)[0,0]
+        loglikelihood -= 0.5*np.linalg.slogdet(covmat)[1]+ 1.0/(2 * sigma**2) * np.dot(np.dot(X,np.linalg.inv(covmat)),X.T)[0,0]
         return -loglikelihood
 
     ###################################################################
