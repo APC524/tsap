@@ -55,12 +55,13 @@ def acf(x, nlags = 40, demean=True, fft=False):
 	cov_array = acovf(x, demean, fft)
 	return ( cov_array[:nlags+1] /cov_array[0])
 
-def BL_stat(acf_array, nobs):
+def BL_stat(acf_array, order, nobs):
     """
     Compute Box-Ljung test statistic
 
 	Input:
     acf_array : an array of acf_functions
+    order: order of the model being tested
     nobs : int
         Number of observations in the entire sample
 
@@ -77,17 +78,19 @@ def BL_stat(acf_array, nobs):
     """
 
 
+
     if(np.abs( acf_array[0] - 1) < 1e-10):
         acf_array = acf_array[1:]  #remove lag0
 
+    acf_array = acf_array[range(order)]
 
-	test_stat = (nobs * (nobs + 2) ) * np.cumsum( (1. / (nobs - np.arange(1, len(acf_array) + 1))) * acf_array**2)
+    test_stat = (nobs * (nobs + 2) ) * np.cumsum( (1. / (nobs - np.arange(1, len(acf_array) + 1))) * acf_array**2)
 
-    chi2 = stats.chi2.sf(test_stat, np.arange(1, len(acf_array) + 1))
+    pval = stats.chi2.sf(test_stat, np.arange(1, len(acf_array) + 1))
 
-    test_result = chi2 > 0.05
+    test_result = pval > 0.05
 
-    return test_stat, chi2, test_result
+    return test_stat, pval, test_result
 
 
 def yule_walker(x, order = 1,  demean=True, method = 'unbiased'):
@@ -147,5 +150,5 @@ def ar_select(x, threshold = 0.1, upper = 40, demean_flag=True, fft_flag=False):
     acf_array = acf(x, nlags = upper, demean = demean_flag, fft = fft_flag)
 
     order = np.argmin(  1 * (np.abs( acf_array) > threshold) )- 1
-    
+
     return order
