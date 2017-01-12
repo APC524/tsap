@@ -197,9 +197,10 @@ class MA(base):
         autocov = np.zeros((lag+1,1))
         temp = sigma**2+np.dot(phi.T,phi)*sigma**2
         autocov[0]=temp
-        for i in range(lag-1):
-            temp = np.dot(phi[0:lag-i-1].T,phi[i+1:lag])*sigma**2
-            autocov[i+1]=temp-phi[i]*sigma**2
+        if lag>1.0:
+            for i in range(lag-1):
+                temp = np.dot(phi[0:lag-i-1].T,phi[i+1:lag])*sigma**2
+                autocov[i+1]=temp-phi[i]*sigma**2
         autocov[lag]=-phi[lag-1]*sigma**2
 
         """Derive the covariance matrix for likelihood function"""
