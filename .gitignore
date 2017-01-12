@@ -3,13 +3,21 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Doxygen files
-doc/latex/
-
-# Temporary files
-tmp*
+# ipython notebook files
 test/*.ipynb
 *checkpoint*
 
-# System files
+# Doxygen files
+doc/manual/html
+doc/manual/latex/
+
+# Latex files
+*.aux
+*.bbl
+*.blg
+*.log
+*.synctex.gz
+
+# Other files
+tmp*
 .DS_Store
