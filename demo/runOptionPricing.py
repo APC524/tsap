@@ -6,7 +6,7 @@ if "../" not in sys.path:
 import optionPricing
 
 # read SP500 data
-SP500 = np.genfromtxt('../data/SP500array.csv', delimiter=',')
+SP500 = np.genfromtxt('../data/GOOG.csv', delimiter=',')
 SP500 = SP500.T
 
 # set Black-Scholes equation parameters

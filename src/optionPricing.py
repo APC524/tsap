@@ -33,13 +33,12 @@ class OptionPricing(object):
         """
         nS, nt = int(self._Smax/dS)+1, int(self._T/dt)+1
         # test stability condition
-        if(dt>1./(self._sigma**2*(nS-1)+self._r/2)):
-            print 'Make sure dt < 1/(sigma**2(nS-1)+r/2)'
-            return 0
+        assert dt < 1./(self._sigma**2*(nS-1)+self._r/2), (
+            'Make sure dt < 1/(sigma**2(nS-1)+r/2)')
         V = np.zeros((nS,nt))
         # terminal condition at t = T, j = nt-1
         for i in range(nS):
-            V[i,-1] = max(i*dS,0)
+            V[i,-1] = max(i*dS - self._K, 0)
         # fixed boundary condition at S=0(i=0), S=Smax(i=nS-1)
         for j in range(nt):
             V[0,j] = 0
