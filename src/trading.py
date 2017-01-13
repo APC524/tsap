@@ -130,21 +130,22 @@ def trade(X, Y, M, nstep, window, money = 1.0):
 	return profit
 
 def rolltrade(X, M, l, nstep, window, money = 1.0):
-	"""trade: return the profit series. First we are given a fitted model, then we need to use this model 
+	"""rolltrade: return the profit series. We repeat the following procedure. First we are given a fitted model, then we need to use this model 
 	to forecast future returns based on historical returns, which is obtained by transfering historical prices 
 	to historical returns. After that, we again transfer the returns to prices and then generate trading signal 
 	based on predicted price. At last we calculate the profit based on the real price series and the trading signal """
 
 	"""
 		Input: 
-				X: numpy array and row vector. Historical prices.
-				Y: numpy array and row vector. Future prices right after X
+				X: numpy array and row vector. Real prices.
 				M: the fitted model from model.py
-				nstep: an integer. How many time steps you want to predict
+				nstep: an integer. Each time, how many time steps you want to predict
 				window: an integer. How long we should trade
 				money: a number. Initial wealth
 		Output:
-				profit: numpy array and row vector. profit series indicating how much money you have"""
+				profit: numpy array and row vector. profit series indicating how much money you have
+				signal: numpy array and row vector. trading signal, 0 no trade, 1 buy signal, -1 sell signal
+				out_pred_price: numpy array and row vector. prediced prices series """
 
 
 	"""The trading window should not be longer than predicted time steps"""
