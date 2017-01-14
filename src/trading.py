@@ -139,6 +139,7 @@ def rolltrade(X, M, l, nstep, window, money = 1.0):
 		Input: 
 				X: numpy array and row vector. Real prices.
 				M: the fitted model from model.py
+				l: the length of trading data
 				nstep: an integer. Each time, how many time steps you want to predict
 				window: an integer. How long we should trade
 				money: a number. Initial wealth
