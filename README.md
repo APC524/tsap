@@ -14,15 +14,23 @@ reduced order model for price prediction.
 
 ## Installation
 
-1. Download TSAP package from GitHub:
-```
-git clone https://github.com/APC524/tsap.git
-```
+1. Download TSAP package from GitHub: 
+  `git clone https://github.com/APC524/tsap.git`
 2. Add the folder [tsap](https://github.com/APC524/tsap/tree/master/tsap) into
    your Python search path.
 
 
-## Architecture
+## Functionality
+
+TSAP package provides six Python classes.
+1. **AR**: the autoregressive model to fit the imput stock price series,
+   computing the log-likelihood and the gradient.
+2. **MR**: the moving average model.
+3. **Solver**: estimate the model parameters given the model class and the
+   optimization method.
+4. OptionPricing: calculate the option price given the underlying stock.
+5. Cluster: impelement the clustering of multiple stock price series.
+6. Reduction: build a reduced order model for price prediction. 
 
 Following is the high-level program structure figure.
 ![Program structure](https://github.com/APC524/tsap/blob/master/doc/report/Figure/structure.png)
@@ -46,4 +54,5 @@ Following is the high-level program structure figure.
 This is the course project of *APC524/MAE560 Software Engineering for Scientific
 Computing* (Fall 2016) in Princeton University. The project members are Wenyan
 Gong, Zongxi Li, Cong Ma, Qingcan Wang, Zhuoran Yang and Hao Zhang. We would
-appreciate Professor Stone and Assistant Instructor Jeffry and Bernat.
+appreciate Professor Stone and Assistant Instructor Jeffry and Bernat for their
+guidance and help.
