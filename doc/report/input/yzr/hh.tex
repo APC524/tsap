@@ -1,0 +1,10 @@
+%!TEX root = ../../report.tex
+
+\subsection{Data Preparation and  Preprocessing}
+
+In this package, we provide methods to simulate data from specified time series models and a real-world dataset, thus enabling both theoretical research and applications. 
+
+For simulated data, we provide functions that samples from the \texttt{AR(p), MA(q), ARMA (p,q), GARCH(p,q)} models. Given the parameters of the model, we obtain a $n\times T$ matrix storing  $n$ independent realizations of the time series with time $T$. Since the \texttt{for} loop in \texttt{Python}
+is slow, we integrate \texttt{c} code with python using \texttt{Cython}.
+
+For real data, we  provide \texttt{S\&P 500} dataset, which consists of the prices of the Standard \& Poor stocks in a consecutive $490$ days.  In addition, we also  preprocess the raw data, thus enabling users to directly apply various methods on the dataset. More specifically, we provide functions that can transfer the price time series to return time series and do the reverse transferring. For instance, if the user inputs daily price of \texttt{Google} stock, then we can output the daily return of \texttt{Google} stock. If the user inputs the daily return,  we are able to output the daily price. Moreover, we can detect the peak and trough for a given time series, which will be used for developing trading strategy. For example, if you input \texttt{Google} stock price series, we can detect the highest price and the lowest price as well as their location in the time series.

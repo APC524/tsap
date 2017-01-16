@@ -13,108 +13,154 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{bm}
+%\usepackage {natbib}
 \usepackage{graphicx,caption,subcaption,float}
 
-\bibliographystyle{ieeetr}
+\usepackage[colorlinks=true,
+            linkcolor=red,
+            urlcolor=blue,
+            citecolor=blue]{hyperref}
 
-\title{APC524 Final project report
-\\Time series analysis in python}
+\title{\Huge Time Series Analysis in  Python}
 
-\author{Wenyan Gong, Zongxi Li, Cong Ma
-\\Qingcan Wang, Zhuoran Yang, Hao Zhang
-\\Princeton University}
+\author{Wenyan Gong, Zongxi Li, Cong Ma, \\
+Qingcan Wang, Zhuoran Yang, Hao Zhang}
 
 \date{\today}
 
 \begin{document}
 \maketitle
 
-\section{Project objective}
-Time series analysis comprises methods for analyzing time series data in order to extract meaningful statistics and other characteristics of the data. It’s widely used in statistics, signal processing, pattern recognition, mathematical finance, weather forecasting, earthquake prediction, control engineering, and largely in any domain of applied science and engineering which involves temporal measurements. 
+\section{Project Objective}
+Time series analysis comprises methods for analyzing time series data in order to extract meaningful statistics and other characteristics of the data. It is widely used in signal processing, pattern recognition, mathematical finance, weather forecasting, earthquake prediction, control engineering, and largely in any domain of applied science and engineering which involves temporal measurements. As in Figure \ref{fig:time_series}, we plot the USD to CNY exchange rate.
 
-In this project, we will play a game with time series in finance. It has gained its popularity in Wall Street recently, since it is fundamental to the most promising quantitative investment strategies. We develop a system that can predict future prices of stocks, with different time series models. 
+In this project, we will play a game with time series in finance. It has gained its popularity in Wall Street recently, since it is fundamental to most promising quantitative investment strategies. We develop a system that can predict future prices of stocks using various kinds of methods for time series analysis. 
 
 \begin{figure}[H]
         \centering
-     \includegraphics[width=.5\linewidth]{./Figure/USD-CNY.png}
+     \includegraphics[width=.7\linewidth]{./Figure/USD-CNY.png}
 \caption{USD to CNY exchange rate. Jan 12 2016 - Jan 12 2017. Source, Yahoo finance.}
+\label{fig:time_series}
 \end{figure}
 
-Given input of a stock price series, our system will first fit some powerful and popular time series models, such as autoregressive (AR) model, moving average (MA) model and other derived models. This procedure will give you the estimation of parameters in these models. 
+Given input of a stock price series, our system will first fit some powerful and popular time series models, such as the autoregressive (AR) model and the moving average (MA) model. This procedure will give you the estimator of the parameters in these models. 
 
-The most important task in estimation is the optimization procedure. Users can select one of optimization methods in the system based on their preference. The optimization method includes but not limited to gradient descent and Newton’s method.
+The most important ingredient in estimation is the optimization procedure. Users can select one of optimization methods in the system based on their preference. The optimization method includes but not limited to gradient descent and gradient descent with momentum.
 
-After model fitting and estimation, our system provides a fast way to do statistical inference. Users can do different kinds of statistical test as well as confidence interval. Moreover, with fitted model, future price prediction is made and it’s compared with real price data. Moreover, we provide different methods to assess the prediction accuracy, which will be visualized afterwards. With the identified model, we can further consider trading strategy and option pricing.
+After model fitting and estimation, our system provides a fast way to do statistical inference. Users can do different kinds of statistical test as well as obtain confidence intervals. Moreover, with fitted model, future price prediction is made and it’s compared with real price data. Moreover, we provide different methods to assess the prediction accuracy, which will be visualized afterwards. With the identified model, we can further consider trading strategy and option pricing.
 
-More interestingly, if users input multiple stock prices, we can divide these stocks into different groups, which is called clustering. Among each group, stocks share similarity. Different clusters will also be visualized. With collection of stocks (e.g., S\&P 500), we can exploit the correlations within them and build a reduced order model for price prediction. For example, principal component analysis can be used to extract dominant features in the finanical market.
+More interestingly, if users input multiple stock prices, we can divide these stocks into different groups, which is called clustering. Among each group, stocks share certain degree of similarity. Different clusters will also be visualized. With collection of stocks (e.g., S\&P 500), we can exploit the correlations within them and build a reduced order model for price prediction. For example, principal component analysis can be used to extract dominant features in the financial market.
 
-\section{Design process}
-We decide to use python, since it's free, and widely distributed. Moreover, there are many powerful packages, e.g., numpy, scipy, etc.
+\section{Design Process}
+Given the tasks, there are many factors to consider. First, we need to specify the programming language to use. We decide to use python, since it's free, and widely distributed. Moreover, there are many powerful packages, e.g., \texttt{numpy} (linear algebra), \texttt{scipy} (scientific computation), \texttt{matplotlib} (plotting library), etc.
 
-We make use of existing packages like numpy and matplot, but largely other parts are made by our group. For example, optimization method like gradient descent are implemented by us.
+We make use of existing packages like \texttt{numpy} and \texttt{matplotlib}, but largely other parts are made by our group. For instance, we implemented various optimization methods like the (stochastic) gradient descent (GD), and GD with momentum.
 
-Github is used to track the progress of this project, and streamlines the colleboration within our group.
+\texttt{Github} is used to track the progress of this project, and streamlines the collaboration within our group. \texttt{Github} is a powerful and convenient tool that really makes a difference in group development of codes.
 
-Along the way, we have adopted the philosiphy of object oriented programming (OOP) by carefully designing classes which include relevant functions.
+We make use of \texttt{Doxygen} to generate documentation for our project. The users can view various classes of this project in an interactive way via a web browser.
 
-Part of our code are tested using Python unittest, since there are analytical solutions. For more complicated functions, they are tested using canonical examples, and by comparing with the outputs of standard machine learning package scikit-learn.
-
-Doxygen is used to document this project. Add explainations for doxygen.
 \begin{figure}[H]
         \centering
-     \includegraphics[width=.7\linewidth]{./Figure/Doxygen.png}
+     \includegraphics[width=.8\linewidth]{./Figure/Doxygen.png}
 \caption{Doxygen documentation}
 \end{figure}
 
-We have a few milestones for this project. (1) Prototype, Dec 15. In this release, we had at least one implementation for each step. Then given a time series data, we could apply at least one method from each class to do the analysis. (2) Alpha version, Jan 1. In this release, we completed most methods in each class. (3) Final version, Jan 12.  In this relase, we finalized the project. Finish all the testing using various data including simulated data and real finanical data.
+Along the way, we have adopted the philosophy of object oriented programming (OOP) by carefully designing classes which include relevant functions. For instance, in the Reduction class, we implemented various model reduction methods including principal component analysis, independent component analysis, and dynamic mode decomposition.
+
+Part of our code are tested using Python unittest, since there are analytical solutions. For more complicated functions, they are tested using canonical examples, and by comparing with the outputs of standard machine learning package scikit-learn.
+
+We have a few milestones for this project. (1) Prototype, Dec 15. In this release, we had at least one implementation for each step. Then given a time series data, we could apply at least one method from each class to do the analysis. (2) Alpha version, Jan 1. In this release, we completed most methods in each class. (3) Final version, Jan 12.  In this release, we finalized the project. Finish all the testing using various data including simulated data and real financial data.
 
 \section{Architecture}
-The high-level program structure is shown below. The division of work is pretty even, and there are some minor work that are too trivial to mention extensively here. Overall, the program consists of two parts. The first part deal with a single time series, and exploits the time correlation within the time series. There is data preprocessing module that takes the raw data and get the right dataformat for later analysis. Optimization, model, and solver are used all together to identify the models. Finally, there is a post processing module that makes use of the information from model. The post processing module includes parameter inference, trading strategy, and option pricing. The second part deals with a collection of time series of data, basically it exploits the correlation between different time series. In this way, we can gain more insights into the finanical market. While these insights are impossible for a single time series.
+The high-level program structure is shown below. The division of work is pretty even, and there are some minor work that are too trivial to mention extensively here. 
 \begin{figure}[H]
         \centering
-     \includegraphics[width=.5\linewidth]{./Figure/structure.png}
+     \includegraphics[width=.7\linewidth]{./Figure/structure.png}
 \caption{Program structure and division of work}
 \end{figure}
+Overall, the program consists of two parts. The first part deal with a single time series, and exploits the time correlation within the time series. There is data preprocessing module that takes the raw data and get the right data format for later analysis. Optimization, model, and solver are used all together to identify the models. Finally, there is a post processing module that makes use of the information from model. The post processing module includes parameter inference, trading strategy, and option pricing. The second part deals with a collection of time series of data, basically it exploits the correlation between different time series. In this way, we can gain more insights into the financial market. While these insights are impossible for a single time series.
 
-\subsection{Data collection \& preprocessing}
-We develop simulator to simulate data for model testing. At the same time, real finanical data (S\&P 500) are also collected from online source.
-
+ 
+\input{input/lzx/haha}
+\input{input/yzr/hh}
 \subsection{Model}
-For a given time series, there are several potential classes of models that could be used to describe its variation. Among them, the most frequent used are the autoregressive(AR) model, integrated(I) model and the moving-average(MA) model. The combination of these classes lead to the autoregres- sive moving-average(ARMA) model, the autoregressive integrated moving-average(ARIMA) model and the autoregressive fractionally integrated moving-average(ARFIMA) model. The user could choose the model class he/she wish to fit based on his understanding of the input time series.
+For a given time series, there are two kinds of model class that can be used to fit the time series. One is the autoregressive  (AR) model. The other is the moving average (MA) model. For details, see \cite{Fan}. Inside each class, we provide three functions, initialization, loss function and prediction function. 
 
+To be specific, we can first initialize the model with given parameters. Secondly, the loss function is able to calculate the current loss as well as the gradient of negative loglikelihood function, based on the current parameters in the model. This is crucial, because the loss and gradient will be the input of the optimization method, which will in turn return the updated parameters to the model to calculate new loss and gradient. Finally, the prediction function is able to predict the future time series based on historical time series and fitted parameters.
 \subsection{Optimization}
-After the model type being fixed, there would be certain loss function regarding the selected model. The key of model fitting is to decide the parameters, which are derived by minimizing the loss function. Therefore, certain optimization techniques should be applied during the fitting. In our software, the user could choose the optimization tool between gradient descent, Newton method and stochastic gradient descent according to the scale of the problem.
+\input{input/wqc/optim.tex}
+
 
 \subsection{Solver}
-We develop a solver module as the main driver program that uses both model and optimization method to find the solution. It allows the user to update the parameters in the model for one step each, and also allows the user to update them untill convergence.
+\input{input/mc/solver}
 
 \subsection{Inference}
-After model fitting, in order to provide the user with more overall information about the model, our software also do inference work regarding the parameters. The software would construct confidence interval of given level for each parameter, conduct test to decide the non-zero parameters and calculate the corresponding P-value. This could help to identify the pattern of the model and help the user develop deeper understanding of the given time series.
+\input{input/yzr/arch_inf}
 
-\subsection{Trading strategy}
-The software is able to predict the future price for each stock based on the fitted model. Hence, in the data visualization part, it would plot the estimated future price and an prediction interval along with the previous price that is already known. Together, some trading strategy would be made based on the prediction. The software could provide the user with the selling or buying point of certain stocks.
+\subsection{Trading Strategy}
 
-\subsection{Option pricing}
-option pricing
+The software is able to generate trading signal based on predicted price. To be specific, it can detect which time point to buy and which to sell. Please see function \texttt{signal\_generation()}. Moreover, it can calculate the profit and loss based on existing trading signal, which can be realized by \texttt{profit\_loss()}
 
-\subsection{Clustering}
-When a large number of time series are given, some of them may share similar patterns since they might be commonly affected by several intrinsic factors. With clustering techniques, the software would be able to identify the similar time series, i.e. stocks with similar variation, and divide them into groups. This would help the user gain a better knowledge of the stocks and their patterns.
+The most important function for the trading is \texttt{rolltrade()} , which can automatically do the trading with historical data and fitted model. This function will call other  functions from the ``model" as well as the functions that generate signals and calculate the profit. It will finally return the predicted price, trading signal and profit time series. Moreover, there are many options for the trading, for instance, you can specify the trading frequency, the prediction length and the initial wealth. 
 
-\subsection{Model reduction}
-model reduction
+\subsection{Option Pricing}
+\input{input/wqc/option.tex}
 
-program structure, division of work, user interface, 
-independent component analysis \cite{hyvarinen2000independent}.
+
+\input{input/yzr/arch_clustering}
+
+\subsection{Model Reduction}
+In order to exploit the correlation between various stocks, we develop a model reduction module. As we know, tech companies are expected to have the same stock price trend. Google and Apple might have the same long term behavior. If we view the stock prices at a given time instant as a vector, then as time progresses, the vector changes with time. Principal component analysis (PCA) \cite{jolliffe2002principal} finds dominant structures in the stock market, and the principal component provides a good basis for low dimensional description. Independent component analysis (ICA)\cite{hyvarinen2000independent}  finds the hidden independent signals that generate the stock data. The hidden signals are independent in the sense that they are most non-gaussian. Dynamic mode decomposition (DMD) \cite{jolliffe2002principal}\cite{rowley2009spectral} fits a linear model that transfers the current state to the next state. Given this linear operator (a matrix), we can find its eigenvectors (DMD modes) and eigenvalues (DMD eigenvalues). If we project the initial condition onto leading DMD modes, then each mode evolves with a given frequency (DMD eigenvalue), and this gives the temporal evolution of states.
 
 \section{Demos of results}
 \subsection{Modal validation}
-\subsection{Finanical data}
-\subsection{Trading strategy}
-\subsection{Option pricing}
-\subsection{Clustering}
-\subsection{Model reduction}
+\input{input/mc/demo}
+\subsection{Financial data}
+With our package, we would be able to play with real financial data: to fit a suitable model and make highly reasonable predictions. In this section, we take the stock return of Google from year 2015-2016 as an example. There are altogether 490 trading days during the time. The stock prices and returns are shown below:
 
+\begin{figure}[H]
+        \centering
+     \includegraphics[width=.45\linewidth]{./Figure/price.pdf}
+     \includegraphics[width=.45\linewidth]{./Figure/return.pdf}
+\caption{Left, Google stock pirce. Right, Google stock return.}
+\end{figure}
+
+We may fit an \texttt{AR(5)}  model according to the return in the first 480 trading days. Here, the lag value is picked in a moderate size to balance the complexity and validity. By choosing the optimization method to be stochastic gradient descent with momentum update, a fitted model is quickly returned. With the fitted model, we would be able to predict the future return as well as the future stock price for the following days. Here, we make a prediction for 5 days.
+\begin{figure}[H]
+        \centering
+     \includegraphics[width=.45\linewidth]{./Figure/predprice.pdf}
+     \includegraphics[width=.45\linewidth]{./Figure/predreturn.pdf}
+\caption{Left, predicted Google stock price. Right, predicted Google stock return.}
+\end{figure}
+As we can see from the figure, we correctly predict the trend of the stock price. Moreover, the predicted price and the true price are very close. This lays a good foundation for the following trading section.
+
+\subsection{Trading strategy}
+\input{input/lzx/demo}
+\subsection{Option pricing}
+\input{input/wqc/demo}
+\subsection{Clustering}
+\input{input/yzr/demo}
+\subsection{Model reduction}
+In order to demonstrate the use of model reduction in financial market, we will take \texttt{S\&P 500} data as an example. The data we use consists of 470 stocks, and 490 transition days. So the state dimension is 470. ICA does not work well in this case. We will apply PCA and DMD. Using the PCA and DMD outputs, we predict the stock price for the first stock in \texttt{S\&P 500}.
+
+\begin{figure}[H]
+        \centering
+     \includegraphics[width=.45\linewidth]{./Figure/PCA.pdf}
+     \includegraphics[width=.45\linewidth]{./Figure/DMD.pdf}
+\caption{Left, PCA. Right, DMD.}
+\end{figure}
+
+It is  observed that with only 5 components, PCA reconstructs the real data pretty well. 5 leading components contains about 97\% of the total energy. This is to say, there is strong  correlation between different stocks. In the financial market, there is clearly coherent structures. In order to get a good prediction, DMD needs 20 modes. DMD gives fixed DMD eigenvalues, so the prediction is very smooth. For both PCA and DMD, the trend of the stock price are captured pretty well.
 \section{Lessons learned}
 
+
+The project allows us to play with various languages and tools. Most files are written in python, which makes us more familiar with common packages like \texttt{numpy} and \texttt{matplotlib.pyplot}. Some of us try using \texttt{Cython} for the first time to realize functions efficiently. Also, we start to truly rely on \texttt{Github} and feel the importance of version control after confronting mistakes. We were once new to these tools, but now we are familiar with the basic usages that might be helpful in our future research work.
+
+Besides language, we also make progress in object-oriented programming. We learned how to use classes and inheritance to make the program more ordered and easier to deal with. 
+
+Coding, from solving homework problems to dealing with research, used to be an individual task for most of us. This final project allows us to experience coding in a brand new way. This time, we have to pay much attention to interface design ahead of time to make future collaboration easy. Also, comments are now essential for us to understand  each  other's work. We develop good coding habits through our operation, which is an important lesson we learned from this course.
+
+\bibliographystyle{plain}
 \bibliography{ref}
 \end{document}

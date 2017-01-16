@@ -1,0 +1,80 @@
+%!TEX root = ../../manual.tex
+
+When multiple time series are available, we can analysis the data with modell reduciton methods. The model reduction function is provided in \texttt{reduction.py}. In this file, we provide a class \texttt{Reduction}.
+
+\begin{lstlisting}[language=Python]
+class Reduction(object):
+    """Callable modal reduction object.
+    Example usage:
+    xreduction = Reduction(X), X shape [n_features, n_samples], make sure X is zero-mean
+    xmean, ux, at, energy_content = xreduction.PCA(n_components=3)
+    """
+\end{lstlisting}
+
+The member functions of class \texttt{Reduction} consists of Principal Component Analysis (PCA) \cite{jolliffe2002principal}, Independent Component Analysis (ICA) \cite{hyvarinen2000independent}, and Dynamic Mode Decomposition (DMD) \cite{rowley2009spectral} \cite{schmid2010dynamic}. The definitions of three functions are declared below:
+
+\begin{lstlisting}[language=Python]
+    def PCA(self, n_components=None):
+        """
+        Principal component analysis (PCA) of data in matrix
+        Inputs:
+        n_components: integer, number of principal components
+        Returns:
+        ux: principal components
+        at: principal components coefficients
+        energy_content: energy content percentage in the principal components
+        """
+        
+    def ICA(self, n_components, gfunc='logcosh', tol=1e-4, max_iter=200):
+        """
+        Independent component analysis(ICA) of data in matrix X
+        Inputs:
+        n_components: integer, number of independent components
+        gfunc: string, 'logcosh' or 'exp', default 'logcosh', Non-gaussian function
+        tol: float, tolerance of iteration, default 1e-4
+        max_iter: integer, maximum iteration steps, default 200
+        Returns:
+        Ex: array, mean of data
+        T: array [n_features, n_features], whitening matrix, st, xtilde = Tx
+        A: array [n_features, n_components], mixing matrix, st, xtilde = As
+        W: array [n_components, n_features], orthogonal rows, unmixing matrix, st, W = inv(A), s = W*xtilde
+        S: array, [n_components, n_samples], source data, st, S = W*Xtilde
+        """
+        
+    def DMD(self, n_components=None):
+        """
+        Dynamic mode decomposition(DMD) of time series data x(k), find square 
+        matrix A such that x(k+1) = Ax(k). Find eigendecomposition of A, and 
+        corresponding DMD modes, and DMD eigenvalues.
+        """
+\end{lstlisting}
+
+To get a better sense of how to analyse real data with this class. Now we will give an example using \texttt{S\&P 500}.
+\begin{lstlisting}[language=Python]
+import numpy as np
+import reduction
+
+# preprocessing, subtract each stock price mean and normalize by std
+x = np.copy(SP500)
+for i in range(nStock):
+    x[i,:] = (x[i,:] - np.mean(x[i,:]))/np.std(x[i,:])
+    
+# read SP500 data
+SP500 = np.genfromtxt('../data/SP500array.csv', delimiter=',')
+SP500 = SP500.T
+
+# call and test PCA
+n_components = 5
+SPreduction = reduction.Reduction(x)
+ux, at, energy_content = SPreduction.PCA(n_components)
+
+# call and test ICA
+n_components = 10
+SPreduction = reduction.Reduction(x)
+Ex, T, A, W, S = SPreduction.ICA(n_components)
+
+# call and test DMD
+n_components = 20
+SPreduction = reduction.Reduction(x)
+evals, modes, energy_content = SPreduction.DMD(n_components)
+\end{lstlisting}

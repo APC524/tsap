@@ -1,0 +1,39 @@
+%!TEX root = ../../manual.tex
+
+The class \texttt{OptionPricing} calculates the call option price of an underlying
+stock based on the Black-Scholes model.
+
+The following parameters are needed to construct an instance of the
+\texttt{OptionPricing} class:
+\begin{enumerate}
+  \item \texttt{sigma}:
+    the volatility of the underlying stock price, which is the standard
+    deviation of the stock's returns.
+  \item \texttt{K}:
+    the strike price of the option.
+  \item \texttt{T}:
+    the expiry time of the option.
+  \item \texttt{r}:
+    the risk-free interest rate.
+  \item \texttt{Smax}:
+    the maximum stock price we want to consider.
+\end{enumerate}
+
+The method \texttt{solve\_black\_scholes} calculates the option pricing of an
+instance, given the grid size of price and time (\texttt{nS} and \texttt{nt}) as
+input parameters. The option price as an function of stock price and time will
+be stored in the instance.
+
+After running \texttt{solve\_black\_scholes}, we can use 
+\texttt{get\_option\_price} method to get the option price of given underlying
+stock price \texttt{S} and time \texttt{t}.
+
+Following is a usage example of the \texttt{OptionPricing} class:
+\begin{lstlisting}[language=Python]
+goog = np.genfromtxt("../data/GOOG.csv", delimiter=",")
+sigma = np.std((goog[1:] - goog[:-1]) / goog[:-1])
+
+option_price = OptionPricing(sigma=sigma, T=90, K=800, r=0.005, Smax=1200)
+option_price.solve_black_scholes(nS=100, nt=300)
+print(option_price.get_option_price(S=810, t=30))
+\end{lstlisting}

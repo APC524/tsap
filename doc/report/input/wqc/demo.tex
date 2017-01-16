@@ -1,0 +1,16 @@
+%!TEX root = ../../report.tex
+
+This demo shows how to use the \texttt{OptionPricing} class to calculate the
+price of an option.  We choose \texttt{Google} stock and use 490 daily price to
+calculate the volatility.  We set the strike price $K = 800$ and expiry time $T
+= 90$ days. Based on the the Black-Scholes model, we can calculate the call
+option price $V(S, t)$ given current time $t$ and stock price $S$, showed in
+Figure~\ref{fig_option_pricing}. When viewing $V$ as the function of $S$, there
+is a sharp corner at $S = 800$ when $t = T$, and the function is smooth at $t =
+0$, which is the same as the real situation in the market.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width = 0.5\textwidth]{Figure/fig_option_pricing.pdf}
+  \caption{Option Pricing}\label{fig_option_pricing}
+\end{figure}

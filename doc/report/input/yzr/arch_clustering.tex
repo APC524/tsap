@@ -1,0 +1,8 @@
+%!TEX root = ../../report.tex
+
+\subsection{Clustering}
+In order to handle the cope with heterogeneous datasets, i.e., datasets with various  characteristics, we provide clustering methods that enable users to perform data analysis with more accuracy.  By utilizing clustering tools, users may discover hidden structures shared by a small subgroup of the dataset  that are buried due to the large scale of the hole dataset. 
+
+To better understand the importance of clustering, let us consider the example of stock market, which consists of stocks that  belong to various sectors. Although there is a global trend of the market as a whole, various sectors may exhibit  different, even converse movements. Thus, global information can be too crude to perform more fine-grained analysis; it would cause huge error if the user predicts the trend of energy stocks using data coming from the whole market.
+
+In the package, we provide a variety of commonly used clustering methods, which include k-means, hierarchical clustering,  spectral clustering, and Gaussian mixture modeling. See   \cite{elsbook} and \cite{bishop2006pattern} for introduction of clustering methods. Our methods yield results  comparable with other machine learning packages in \texttt{python}. In specific, in \texttt{demo\_clustering.ipynb} we showcase our method and  compare with the \texttt{Scikit-Learn} package using the \texttt{S\&P 500} dataset, which consists of the prices of $470$ stocks in a period of $490$ days. A concise illustration is provided in the next section.

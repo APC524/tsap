@@ -1,0 +1,36 @@
+%!TEX root = ../../manual.tex
+
+The methods that perform statistical inference is written in \texttt{inference.py}, which consists of five functions, i.e., \texttt{acovf}, \texttt{acf}, \texttt{BL\_stat}, \texttt{yule\_walker}, and  \texttt{ar\_select}.  In the following, we give a detailed introduction of the usages of these functions.
+Firstly, \texttt{acovf} and  \texttt{acf} returns the auto-covariance and auto-correlations of one path of time series. The input include 
+\begin{enumerate}
+\item \texttt{x}: an one dimensional \texttt{numpy} array.
+\item \texttt{demean}: a boolean variable that tells whether to subtract the mean.
+\item  \texttt{nlags}: maximum order of lags in autocorrelation.
+\item  \texttt{fft}: boolean, whether use fast Fourier transform.
+\end{enumerate}
+The output is an array of auto-covariance or auto-correlation. 
+To use these function, we can run 
+\begin{lstlisting}[language=Python]
+auto_cov = acovf(x, demean=True, fft=False) 
+auto_cor = acf(x, nlags = 40, demean=True, fft=False)
+\end{lstlisting}
+Secondly, \texttt{BL\_stat} performs Box-Ljung test that tests if the time series data are correlated.     The input are \texttt{acf\_array},  which is  an array of auto-correlation coefficients (ACF), \texttt{order}, which is the maximum order of ACF used,   and \texttt{nobs}, which is the time length that is used to compute the ACF. The outputs are the test statistic, a float number , the $p$-value, also a float number, and the test result, which  a boolean. To use this function, an example is 
+\begin{lstlisting}[language=Python]
+test_stat, pval, test_result = BL_stat(acf_array, order, nobs):
+\end{lstlisting}
+Finally,  \texttt{yule\_walker}  and  \texttt{ar\_select} are specified for the \texttt{AR(p)} model.   In specific, \texttt{ar\_select} takes an array of time series   as input and outputs the estimated order of the autoregresive model. Whereas  \texttt{yule\_walker} takes the time series and the order as input and outputs the estimated parameters using Yule Walker method. The usage will be clear from the following example.
+\begin{lstlisting}[language=Python]
+import tsap.inference as inference
+from tsap.ts_gen import ar1_gen
+
+ts = ar1_gen(0.3, sigma = 1.0, time = 500, num = 1, burnin = 2000)
+order_est = inference.ar_select(ts)
+print("The estimated order of AR model is "+ str(order_est))
+rho, sigma = inference.yule_walker(ts, order = 1)
+print("The estimated model parameter is "+ str(rho))
+\end{lstlisting}
+The output is 
+\begin{lstlisting}[language=Python]
+>>The estimated order of AR model is 2
+>>The estimated model parameter is [ 0.2973149]
+\end{lstlisting}

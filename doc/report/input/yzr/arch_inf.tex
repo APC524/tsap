@@ -1,0 +1,6 @@
+%!TEX root = ../../report.tex
+
+In addition to parameter estimation, we also provide inferential methods that enables users to access the uncertainty of the estimated model. After all, once the model is estimated, it is still not clear how reliable our estimation is. In fact, even for the pure white noise, it is possible to estimate a statistical model, even though that model is not meaningful. 
+
+In specific, we provide functions that estimates the auto-covariance auto-correlation functions (ACF) and perform  the Box-Ljung test  that checks if the  ACF is significant. See \cite{Fan} for a more systematic treatments of statistical inference for time series models. In addition, we provide functions that select the order of \texttt{AR(p)} models, estimate  the parameters, and test whether the parameters are significant.
+

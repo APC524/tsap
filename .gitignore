@@ -12,8 +12,11 @@ doc/manual/html
 doc/manual/latex/
 
 # Latex files
+# *.tex
+# *.bib
+# *.bbl
 *.aux
-*.bbl
+*.bak
 *.blg
 *.log
 *.synctex.gz

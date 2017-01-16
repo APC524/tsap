@@ -1,0 +1,56 @@
+%!TEX root = ../../manual.tex
+We provide a class named Solver which bridges the model class and the optimization methods. The solver class is used to solve the maximum likelihood estimation of various time series models. To construct an instance of the solver class, you need the following inputs:
+\begin{enumerate}
+\item  \texttt{solver}: an instance of the model class. Most importantly, given parameters of the model and the data, it can return the negative log-likelihood of the data and the gradients with respect to the parameters.
+\item \texttt{data}:  an  \texttt{numpy 2d array} which specifies the data we obtain. The size of the \texttt{numpy 2d array} is $N \times T$, where $N$ is the number of time series we get and $T$ is the length of each time series.
+\item  \texttt{kwargs}: a list of command line arguments. They include
+	\begin{enumerate}
+		\item \texttt{update\_rule}: a \texttt{string} used to specify the optimization method to use. It could be either \texttt{sgd} or \texttt{sgd\_momentum}. 
+		\item \texttt{optim\_config}: a \texttt{dictionary} used to specify the hyper-parameters for the optimization methods. For example, the key can be a \texttt{string} like \texttt{learning\_rate} and the value can be \texttt{1e-5}. 
+		\item \texttt{num\_epochs}: an integer number used to specify the number of epochs for the optimization process
+		\item \texttt{batch\_size}: an integer number used to specify the number of examples for one step of optimization process.
+		\item \texttt{print\_every}: an integer number used to specify how often the program displays the information of the loss value.
+	\end{enumerate}
+\end{enumerate} 
+
+For an example of usage, see the following. 
+   \begin{lstlisting}[language=Python]
+	from tsap.solver import Solver
+	from tsap.model import AR, MA
+	from tsap.ts_gen import ar1_gen
+	lag = 1
+	sigma = 2.0
+	intercept = 0.1
+	phi = np.random.randn(lag, 1)
+	AR_model = AR(lag=lag, phi=phi, sigma=sigma, intercept=intercept)
+
+	# use the Solver to solve the AR model
+	AR_solver = Solver(AR_model, Y,
+	update_rule='sgd',
+	optim_config={
+	'learning_rate': 3e-5,},
+	num_epochs=3000, batch_size=1,
+	print_every=100)
+	AR_solver.train()
+	AR_model.params
+\end{lstlisting}
+The output, as expected, is
+   \begin{lstlisting}[language=Python]
+	the loss is 424.110945
+	the loss is 399.237624
+	the loss is 378.012857
+	the loss is 357.765501
+	the loss is 337.557537
+	the loss is 317.542124
+	the loss is 299.271549
+	the loss is 285.752707
+	the loss is 278.916407
+	the loss is 276.705150
+	the loss is 276.152286
+	the loss is 276.012074
+	the loss is 275.972341
+	{'intercept': array([-0.12022489]),
+	'phi': array([[ 0.47215311]]),
+	'sigma': array([ 0.96874162])}
+\end{lstlisting}
+For more examples. please refer to the demos.

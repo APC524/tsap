@@ -1,0 +1,24 @@
+\begin{thebibliography}{1}
+
+\bibitem{hyvarinen2000independent}
+Aapo Hyv{\"a}rinen and Erkki Oja.
+\newblock Independent component analysis: algorithms and applications.
+\newblock {\em Neural networks}, 13(4):411--430, 2000.
+
+\bibitem{jolliffe2002principal}
+Ian Jolliffe.
+\newblock {\em Principal component analysis}.
+\newblock Wiley Online Library, 2002.
+
+\bibitem{rowley2009spectral}
+Clarence~W Rowley, Igor Mezi{\'c}, Shervin Bagheri, Philipp Schlatter, and
+  Dan~S Henningson.
+\newblock Spectral analysis of nonlinear flows.
+\newblock {\em Journal of fluid mechanics}, 641:115--127, 2009.
+
+\bibitem{schmid2010dynamic}
+Peter~J Schmid.
+\newblock Dynamic mode decomposition of numerical and experimental data.
+\newblock {\em Journal of Fluid Mechanics}, 656:5--28, 2010.
+
+\end{thebibliography}

@@ -1,0 +1,24 @@
+%!TEX root = ../../report.tex
+In this section, we demonstrate how we can use our code to do the trading strategy. We pick the  \texttt{Google} stock price from 01/02/2015 to 12/09/2016, which contains 490 trading days data. To begin with,  we made use of the first 100 data points to fit \texttt{AR(5)} model, and then predicted future prices. This part is similar to the above section, so we will omit the details, including the optimization procedure. After getting the fitted model, we input it as well as some parameters into trading package. There, we specify the parameters as follows. The training length is $\texttt{l}=100$. The prediction step is $\texttt{nstep}=20$. The length of trading window is $\texttt{window}=5$. And the initial money to invest is $\texttt{money}=100$. 
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}[t]{0.32\linewidth}
+		\centering
+		\includegraphics[width = 1 \textwidth]{./Figure/signal.pdf}
+		\caption{Trading signal}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.32 \linewidth}
+		\centering
+		\includegraphics[width = 1 \textwidth]{./Figure/profit.pdf} 
+		\caption{Profit curve}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.32\linewidth}
+		\centering
+		\includegraphics[width = 1 \textwidth]{./Figure/20days.pdf} 
+		\caption{20 days trading signal}
+	\end{subfigure}
+	\caption{(a) shows the trading signals over 490 days. (b) shows the profit over 490 days. (c) shows the trading signals over 20 days. }
+	\label{fig:trading}
+\end{figure}
+
+After running the package, we can generate trading signals and profit curve, which are shown in Figure \ref{fig:trading}. As we can see from the first picture, the red ball is the buying signal and the green triangle is the selling signal. Our signal is very effective as is shown in the third picture in Figure \ref{fig:trading}. We always buy at relative low price and sell at high price. In addition, our strategy is really successful, which can be seen in the second picture. Our final profit is about $15 \%$. We can do the trading with other model estimation methods, but we don't show demo here due to the limit of pages.

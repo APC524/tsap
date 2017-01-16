@@ -1,0 +1,30 @@
+%!TEX root = ../../manual.tex
+We provide both a real dataset and methods to generate simulated data from various time series models.  For data simulation,  we provide functions that samples from the \texttt{AR(p), MA(q), ARMA (p,q), GARCH(p,q)} models, which is written in \texttt{C} code. See \texttt{c\_ts\_gen.c} for the source code. To integrate \texttt{C} code into \texttt{Python}, we write a \texttt{Cython} wrapper \texttt{ts\_gen.pyx}, which generates a \texttt{Python} module named \texttt{ts\_gen}. This module consists of five functions.  The inputs of these functions all consist  of four  elements: 
+\begin{enumerate}
+\item  \texttt{param}: a \texttt{numpy Nd array} or a few \texttt{float} numbers -- the model parameters.
+\item \texttt{time}:  an  \texttt{integer} -- the total time of the time series.
+\item  \texttt{num}: an  \texttt{integer} -- number of independent sample paths, 
+\item \texttt{burnin}: an  \texttt{integer} -- the length of burnin period. This parameter has default value $2000$. 
+\end{enumerate} 
+These functions all output a \texttt{numpy Nd array} with dimension $( \texttt{num} \times \texttt{time})$ which stores  \texttt{num} independent paths of the time series data until $T = \texttt{time}$. Functions that generate simulated data are listed as follows. 
+ 
+  \begin{lstlisting}[language=Python]
+-ar1_gen(double rho, double sigma, int time, int num, int burnin)
+-ma1_gen( double rho, double constant,  int time,  int num,  int burnin 
+-arch1_gen(double a0, double a1, int time, int num, int burnin)
+-garch11_gen(double a, double b, double c, const int time, const int num, const int burnin 
+-garch11_gen(double a, double b, double c, const int time, const int num, const int burnin )
+-arma_gen( np.ndarray[double, ndim=1, mode="c"] ar, int p, np.ndarray[double, ndim=1, mode="c"]  ma, const int q, const double sigma,
+const int time, const int num, const int burnin)
+\end{lstlisting}
+For an example of usage, see the following example. 
+   \begin{lstlisting}[language=Python]
+from tsap.ts_gen import arma1_gen
+import numpy as np
+Y = ar1_gen(0.5, sigma = 1.0, time = 200, num = 10, burnin = 2000)
+print(Y.shape)
+\end{lstlisting}
+The output, as expected, is
+   \begin{lstlisting}[language=Python]
+>>(10, 200)
+\end{lstlisting}

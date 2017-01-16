@@ -1,0 +1,37 @@
+%!TEX root = ../../manual.tex
+We also provide realizations of four clustering methods: K-means, spectral clustering, hierarchical clustering, and Gaussian mixture modeling. These methods are organized by  the \texttt{Cluster} class, which is initialized by an input data matrix of dimension $(\texttt{nsample}\times \texttt{nfeature})$ where \texttt{nsample} is the number of data points and \texttt{nfeature} is the number of features.  An object in the class consists of three attributes:\texttt{\_X}, which stores the data matrix,  \texttt{\_nsample}, and  \texttt{\_nfeature}. All clustering functions in this class is  has the form 
+\begin{lstlisting}[language=Python]
+centroid, labels, clusters =Clustering_method(self, nClusters, maxIter)
+\end{lstlisting}
+Here \texttt{Clustering\_method} is one of \texttt{Kmeans}, \texttt{H\_clustering},  \texttt{Spectral}, and \texttt{Gaussian\_mixture}. In addition, \texttt{nClusters} is the number of clusters and \texttt{maxIter} is the maximum number of iterations, which has default value $300$. The output consists of three items.  \texttt{centroid}, a $\texttt{nClusters} \times \texttt{\_nfeatures} $ matrix storing the centers of clusters; \texttt{labels} is the predicted labels; \texttt{clusters} stores the index of data points in each cluster. The following example shows how to use our package to cluster the \texttt{S\&P 500} dataset. First we import and standardize the data.
+\begin{lstlisting}[language=Python]
+import numpy as np
+# read SP500 data
+SP500 = np.genfromtxt('../data/SP500array.csv', delimiter=',')
+SP500 = SP500.T
+nStock = len(SP500[:,0])
+nTime = len(SP500[0,:])
+
+# preprocessing, standardize data
+X = np.copy(SP500)
+for i in range(nStock):
+    X[i,:] = (X[i,:] - np.mean(X[i,:]))/np.std(X[i,:])
+\end{lstlisting}
+  The we import our package and fit an K-means clustering model on the data with $3$ clusters.
+ \begin{lstlisting}[language=Python] 
+from src.cluster import Cluster
+model = Cluster(X)
+# run K-means
+
+import time
+
+start = time.time()
+centroid, labels, clusters = model.kMeans(nClusters = 5)
+end = time.time()
+
+print("K-means takes "+str(end-start)+" seconds")
+\end{lstlisting}
+The output is 
+ \begin{lstlisting}[language=Python] 
+ K-means takes 0.873986959457 seconds
+ \end{lstlisting}

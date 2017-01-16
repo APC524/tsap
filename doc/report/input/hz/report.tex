@@ -1,0 +1,121 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{geometry}
+ \geometry{
+ a4paper,
+ total={170mm,257mm},
+ left=20mm,
+ top=20mm,
+ }
+ 
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{bm}
+\usepackage{graphicx,caption,subcaption,float}
+
+\bibliographystyle{ieeetr}
+
+\title{APC524 Final project report
+\\Time series analysis in python}
+
+\author{Wenyan Gong, Zongxi Li, Cong Ma
+\\Qingcan Wang, Zhuoran Yang, Hao Zhang
+\\Princeton University}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Project objective}
+Time series analysis comprises methods for analyzing time series data in order to extract meaningful statistics and other characteristics of the data. It’s widely used in statistics, signal processing, pattern recognition, mathematical finance, weather forecasting, earthquake prediction, control engineering, and largely in any domain of applied science and engineering which involves temporal measurements. 
+
+In this project, we will play a game with time series in finance. It has gained its popularity in Wall Street recently, since it is fundamental to the most promising quantitative investment strategies. We develop a system that can predict future prices of stocks, with different time series models. 
+
+\begin{figure}[H]
+        \centering
+     \includegraphics[width=.5\linewidth]{./Figure/USD-CNY.png}
+\caption{USD to CNY exchange rate. Jan 12 2016 - Jan 12 2017. Source, Yahoo finance.}
+\end{figure}
+
+Given input of a stock price series, our system will first fit some powerful and popular time series models, such as autoregressive (AR) model, moving average (MA) model and other derived models. This procedure will give you the estimation of parameters in these models. 
+
+The most important task in estimation is the optimization procedure. Users can select one of optimization methods in the system based on their preference. The optimization method includes but not limited to gradient descent and Newton’s method.
+
+After model fitting and estimation, our system provides a fast way to do statistical inference. Users can do different kinds of statistical test as well as confidence interval. Moreover, with fitted model, future price prediction is made and it’s compared with real price data. Moreover, we provide different methods to assess the prediction accuracy, which will be visualized afterwards. With the identified model, we can further consider trading strategy and option pricing.
+
+More interestingly, if users input multiple stock prices, we can divide these stocks into different groups, which is called clustering. Among each group, stocks share similarity. Different clusters will also be visualized. With collection of stocks (e.g., S\&P 500), we can exploit the correlations within them and build a reduced order model for price prediction. For example, principal component analysis can be used to extract dominant features in the finanical market.
+
+\section{Design process}
+Given the tasks, there are many factors to consider. First, we need to specify the programming language to use. We decide to use python, since it's free, and widely distributed. Moreover, there are many powerful packages, e.g., numpy (linear algebra), scipy (scientific compuatation), etc.
+
+We make use of existing packages like numpy and matplot, but largely other parts are made by our group. For example, optimization method like gradient descent are implemented by us.
+
+Github is used to track the progress of this project, and streamlines the colleboration within our group.
+
+Along the way, we have adopted the philosiphy of object oriented programming (OOP) by carefully designing classes which include relevant functions.
+
+Part of our code are tested using Python unittest, since there are analytical solutions. For more complicated functions, they are tested using canonical examples, and by comparing with the outputs of standard machine learning package scikit-learn.
+
+Doxygen is used to document this project. Add explainations for doxygen.
+\begin{figure}[H]
+        \centering
+     \includegraphics[width=.7\linewidth]{./Figure/Doxygen.png}
+\caption{Doxygen documentation}
+\end{figure}
+
+We have a few milestones for this project. (1) Prototype, Dec 15. In this release, we had at least one implementation for each step. Then given a time series data, we could apply at least one method from each class to do the analysis. (2) Alpha version, Jan 1. In this release, we completed most methods in each class. (3) Final version, Jan 12.  In this relase, we finalized the project. Finish all the testing using various data including simulated data and real finanical data.
+
+\section{Architecture}
+The high-level program structure is shown below. The division of work is pretty even, and there are some minor work that are too trivial to mention extensively here. Overall, the program consists of two parts. The first part deal with a single time series, and exploits the time correlation within the time series. There is data preprocessing module that takes the raw data and get the right dataformat for later analysis. Optimization, model, and solver are used all together to identify the models. Finally, there is a post processing module that makes use of the information from model. The post processing module includes parameter inference, trading strategy, and option pricing. The second part deals with a collection of time series of data, basically it exploits the correlation between different time series. In this way, we can gain more insights into the finanical market. While these insights are impossible for a single time series.
+\begin{figure}[H]
+        \centering
+     \includegraphics[width=.5\linewidth]{./Figure/structure.png}
+\caption{Program structure and division of work}
+\end{figure}
+
+\subsection{Data collection \& preprocessing}
+We develop simulator to simulate data for model testing. At the same time, real finanical data (S\&P 500) are also collected from online source.
+
+\subsection{Model}
+For a given time series, there are several potential classes of models that could be used to describe its variation. Among them, the most frequent used are the autoregressive(AR) model, integrated(I) model and the moving-average(MA) model. The combination of these classes lead to the autoregres- sive moving-average(ARMA) model, the autoregressive integrated moving-average(ARIMA) model and the autoregressive fractionally integrated moving-average(ARFIMA) model. The user could choose the model class he/she wish to fit based on his understanding of the input time series.
+
+\subsection{Optimization}
+\input{input/wqc/optim.tex}
+
+
+\subsection{Solver}
+\input{input/mc/solver}
+
+\subsection{Inference}
+After model fitting, in order to provide the user with more overall information about the model, our software also do inference work regarding the parameters. The software would construct confidence interval of given level for each parameter, conduct test to decide the non-zero parameters and calculate the corresponding P-value. This could help to identify the pattern of the model and help the user develop deeper understanding of the given time series.
+
+\subsection{Trading strategy}
+The software is able to predict the future price for each stock based on the fitted model. Hence, in the data visualization part, it would plot the estimated future price and an prediction interval along with the previous price that is already known. Together, some trading strategy would be made based on the prediction. The software could provide the user with the selling or buying point of certain stocks.
+
+\subsection{Option pricing}
+\input{input/wqc/option.tex}
+
+
+\input{input/yzr/arch_clustering}
+
+\subsection{Model reduction}
+model reduction
+
+program structure, division of work, user interface, 
+independent component analysis \cite{hyvarinen2000independent}.
+
+\section{Demos of results}
+\subsection{Modal validation}
+\subsection{Finanical data}
+\subsection{Trading strategy}
+\subsection{Option pricing}
+\subsection{Clustering}
+\subsection{Model reduction}
+
+\section{Lessons learned}
+
+\bibliography{ref}
+\end{document}

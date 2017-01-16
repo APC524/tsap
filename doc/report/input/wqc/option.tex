@@ -1,0 +1,13 @@
+%!TEX root = ../../report.tex
+
+In finance, an option is a contract which gives the buyer (the owner or holder
+of the option) the right, but not the obligation, to buy or sell an underlying
+asset or instrument at a specified strike price on a specified date. Option
+pricing is an important issue in financial market. 
+
+In the software, we develop a \texttt{OptionPricing} class to calculate the
+option price. The class takes the strike price $K$, the expiry time $T$, the risk-free interest
+rate $r$ and the volatility (standard deviation of the stock's returns) $\sigma$
+as parameters to generate an object. Then the class provides an method to solve the
+Black-Scholes differential equations, and returns the option price $V(S, t)$
+given the current time $t$ and underlying stock price $S$.

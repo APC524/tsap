@@ -1,0 +1,40 @@
+\begin{thebibliography}{1}
+
+\bibitem{bishop2006pattern}
+Christopher~M Bishop.
+\newblock Pattern recognition.
+\newblock {\em Machine Learning}, 128, 2006.
+
+\bibitem{boyd2004convex}
+Stephen Boyd and Lieven Vandenberghe.
+\newblock {\em Convex optimization}.
+\newblock Cambridge university press, 2004.
+
+\bibitem{Fan}
+Jianqing Fan and Qiwei Yao.
+\newblock {\em The Elements of Financial Econometrics}.
+\newblock Science Press, 2015.
+
+\bibitem{elsbook}
+Trevor Hastie, Robert~John Tibshirani, and Jerome Friedman.
+\newblock {\em The elements of statistical learning : data mining, inference,
+  and prediction}.
+\newblock Springer series in statistics. Springer, 2009.
+
+\bibitem{hyvarinen2000independent}
+Aapo Hyv{\"a}rinen and Erkki Oja.
+\newblock Independent component analysis: algorithms and applications.
+\newblock {\em Neural networks}, 13(4):411--430, 2000.
+
+\bibitem{jolliffe2002principal}
+Ian Jolliffe.
+\newblock {\em Principal component analysis}.
+\newblock Wiley Online Library, 2002.
+
+\bibitem{rowley2009spectral}
+Clarence~W Rowley, Igor Mezi{\'c}, Shervin Bagheri, Philipp Schlatter, and
+  Dan~S Henningson.
+\newblock Spectral analysis of nonlinear flows.
+\newblock {\em Journal of fluid mechanics}, 641:115--127, 2009.
+
+\end{thebibliography}

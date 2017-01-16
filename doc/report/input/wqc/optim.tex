@@ -1,0 +1,14 @@
+%!TEX root = ../../report.tex
+
+After the model type being fixed, there would be certain loss function regarding
+the selected model. The key of model fitting is to decide the parameters, which
+are derived by minimizing the loss function. Therefore, certain optimization
+techniques should be applied during the fitting.
+
+In \texttt{optim.py}, we provide several optimization methods including
+stochastic gradient descent, stochastic gradient descent with momentum and
+Broyden–Fletcher–Goldfarb–Shanno (BFGS) method \cite{boyd2004convex}.  The
+methods will be called by the \texttt{Solver} class, which take the current
+iteration point, the gradient value and the configuration parameters as input
+and return the next iteration point. The user can choose the optimization
+methods according to the scale of the problem.

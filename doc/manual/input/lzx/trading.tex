@@ -1,0 +1,91 @@
+%!TEX root = ../../manual.tex
+
+The functions for trading is written in \texttt{trading.py}, which consists of four functions, i.e., \texttt{signal\_generation}, \texttt{profit\_loss}, \texttt{trade}, and \texttt{rolltrade}.  In the following, we give a detailed introduction of the usage of these functions.
+
+Firstly, \texttt{signal\_generation} returns the trading signal, like what time to buy and what time to sell. The input includes
+\begin{enumerate}
+\item \texttt{X}: a one dimensional \texttt{numpy} array, which is the price series.
+\item \texttt{window}: a positive integer that specifies the largest length of one trade. If \texttt{window}=5, that means there's at most one trade activity within 5 days. The default number is 2.
+\end{enumerate}
+The output is a one dimensional numpy array, whose elements are 1 (buying signal), -1 (selling signal), 0 (no signal).
+To use these function, we can run 
+\begin{lstlisting}[language=Python]
+import trading 
+signal = trading.signal_generation(X, window = 5) 
+\end{lstlisting}
+
+Secondly, \texttt{signal\_generation} returns the profit based on given trading signals. The input includes
+\begin{enumerate}
+	\item \texttt{X}: a one dimensional \texttt{numpy} array, which is the price series.
+	\item \texttt{signal}: a one dimensional \texttt{numpy} array that contains trading signals. Usually, it takes the output of \texttt{signal\_generation}.
+	\item \texttt{money}: a positive float number, which is the initial wealth. The default number is 1.
+\end{enumerate}
+The output is a one dimensional numpy array, which is the time series of profit at different time points.
+To use these function, we can run 
+\begin{lstlisting}[language=Python]
+import trading 
+signal = trading.signal_generation(X, window = 5) 
+profit = trading.profit_loss(Y, signal, money = 100) 
+\end{lstlisting}
+
+Next, \texttt{trade} returns the profit in certain time period. Specifically, given a fitted model, it uses this model to forecast future returns based on historical returns, which are obtained by transfering historical prices 
+to historical returns. After that, it again transfers the returns to prices and then generates trading signal 
+based on predicted prices. At last it calculates the profit based on the real price series and the trading signals. The input includes
+\begin{enumerate}
+	\item \texttt{X}: a one dimensional \texttt{numpy} array, which is historical price.
+	\item \texttt{Y}: a one dimensional \texttt{numpy} array, which is future prices.
+	\item \texttt{M}: a class from \texttt{model.py}, which is a fitted model.
+	\item \texttt{nstep}: an positive integer, which specifies how many steps to predict.
+    \item \texttt{window}: an positive integer that specifies the largest length of one trade. If \texttt{window}=5, that means there's at most one trade activity within 5 days. 
+	\item \texttt{money}: a positive float number, which is the initial wealth. The default number is 1.0.
+\end{enumerate}
+The output is a one dimensional numpy array, which is the time series of profit at different time points.
+To use these function, we can run 
+\begin{lstlisting}[language=Python]
+import trading
+import model
+AR_model = model.AR(lag=3, phi=np.array([[1],[1],[1]]), sigma=1, intercept=0.1)
+profit = trading.trade(X, Y, M = AR_model, nstep = 10, window = 5, money = 100) 
+\end{lstlisting}
+
+
+Lastly, \texttt{rolltrade} returns the profit, trading signal, and the predicted prices by rolling trading in the whole time period, which is an extension of \texttt{trade}. It will repeat the following procedure until the data is used up. Specifically, given a fitted model, it uses this model to forecast future returns based on historical returns, which are obtained by transfering historical prices 
+to historical returns. After that, it again transfers the returns to prices and then generates trading signal 
+based on predicted prices. At last it calculates the profit based on the real price series and the trading signals. The input includes
+\begin{enumerate}
+	\item \texttt{X}: a one dimensional \texttt{numpy} array, which is historical price.
+	\item \texttt{M}: a class from \texttt{model.py}, which is a fitted model.
+	\item \texttt{l}: an integer number, which specifies how many data points are used to train for each trading.
+	\item \texttt{nstep}: an positive integer, which specifies how many steps to predict.
+	\item \texttt{window}: an positive integer that specifies the largest length of one trade. If \texttt{window}=5, that means there's at most one trade activity within 5 days. 
+	\item \texttt{money}: a positive float number, which is the initial wealth. The default number is 1.0.
+\end{enumerate}
+The output is three one-dimensional numpy array, which are the time series of profit, trading signal, and the predicted prices at different time points.
+To use these function, we can run 
+\begin{lstlisting}[language=Python]
+# import library
+import trading 
+import model
+import numpy as np
+import data_processor as dp
+
+# read data and do the preprocessing
+data = np.loadtxt("../data/GOOG.csv", delimiter=',')
+X = np.array([data[0:100]])
+Y = dp.get_return(X)
+
+# initialize the model
+lag = 5
+sigma = 1.0
+intercept = 0.1
+phi = np.array([[ 0.04560256],[ 0.0535601 ],[-0.78190871],[ 1.30062633],[ 0.46616754]])
+AR_model = AR(lag=lag, phi=phi, sigma=sigma, intercept=intercept)
+
+# solve the model
+_, grads = AR_model.loss(Y)
+solver = Solver(AR_model, Y, update_rule='sgd_momentum', optim_config={'learning_rate': 1e-6,}, num_epochs=10000, batch_size=1,print_every=10)
+solver.train()
+
+# get the trading profit, signal and predicted price
+profit, signal, out_pred_price = trading.rolltrade(X, M = AR_model, l = 100, nstep = 20, window = 5, money = 100) 
+\end{lstlisting}

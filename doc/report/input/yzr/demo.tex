@@ -1,0 +1,40 @@
+%!TEX root = ../../report.tex
+
+To illustrate our clustering methods, we apply our methods on the \texttt{S\&P 500} dataset and compare  with clustering methods provided in the \texttt{Scikit-Learn} package.  We set the number of clusters to $5$ and record the amount of time needed for each of the methods, which is reported in Table-\ref{tab:cluster}. In addition, to visualize the clustering results, we plot all the $470$ stocks with  labels in different colors.  As shown in Figures \ref{fig:cluster1}--\ref{fig:cluster3}, our methods are comparable with  \texttt{Scikit-Learn}.
+
+\begin{table}[htb]
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+& K-means &Spectral Clustering & Hierarchical Clustering \\\hline
+Our Package & 0.4423 s &0.4749 s& 0.1838 s   \\\hline
+\texttt{Scikit-Learn} &0.1308 s & 0.4022 s & 0.1288 s\\\hline
+\end{tabular}
+\end{center}
+\caption{Running time of Clustering Algorithms implemented by our package and \texttt{Scikit-Learn}. As shown in the table, our package provide comparable implementations}
+\label{tab:cluster}
+\end{table}%
+
+\begin{figure}[htb]
+\centering
+\hskip-27pt\includegraphics[width=0.5\textwidth]{./Figure/k-means.pdf}
+\hskip-12pt\includegraphics[width=0.5\textwidth]{./Figure/SK-k-means.pdf}\\
+\caption{K-means clustering for the \texttt{S\&P 500} dataset using our package and   \texttt{Scikit-Learn}.The plot of our clustering result is on the left.}
+\label{fig:cluster1}
+\end{figure}
+
+\begin{figure}[htb]
+\centering
+\hskip-27pt\includegraphics[width=0.5\textwidth]{./Figure/SC.pdf}
+\hskip-12pt\includegraphics[width=0.5\textwidth]{./Figure/SK-SC.pdf}\\
+\caption{Spectral clustering for the \texttt{S\&P 500} dataset using our package and   \texttt{Scikit-Learn}. The plot of our clustering result is on the left.}
+\label{fig:cluster2}
+\end{figure}
+
+\begin{figure}[htb]
+\centering
+\hskip-27pt\includegraphics[width=0.5\textwidth]{./Figure/HC.pdf}
+\hskip-12pt\includegraphics[width=0.5\textwidth]{./Figure/SK-HC.pdf}\\
+\caption{Hierarchical clustering for the \texttt{S\&P 500} dataset using our package and   \texttt{Scikit-Learn}. The plot of our clustering result is on the left.}
+\label{fig:cluster3}
+\end{figure}

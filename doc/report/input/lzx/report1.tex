@@ -79,8 +79,13 @@ The high-level program structure is shown below. The division of work is pretty 
 \subsection{Data collection \& preprocessing}
 We develop simulator to simulate data for model testing. At the same time, real finanical data (S\&P 500) are also collected from online source.
 
+For the preprocessing part, we provide functions that can transfer the price time series to return time series and do the reverse transfering. For instance, if you input daily price of GOOGLE stock, then we can output the daily return of GOOGLE stock. If you input daily return of it, we can output the daily price. Moreover, we can detect the peak and trouph for a given time series, which will be used for developing trading strategy. For example, if you input GOOGLE stock price series, we can detect the highest price and the lowest price.
+
 \subsection{Model}
-For a given time series, there are several potential classes of models that could be used to describe its variation. Among them, the most frequent used are the autoregressive(AR) model, integrated(I) model and the moving-average(MA) model. The combination of these classes lead to the autoregres- sive moving-average(ARMA) model, the autoregressive integrated moving-average(ARIMA) model and the autoregressive fractionally integrated moving-average(ARFIMA) model. The user could choose the model class he/she wish to fit based on his understanding of the input time series.
+For a given time serise, there are two kinds of model class that can be used to fit the time series. One is the autoregressive  (AR) model. The other is moving average (MA) model. Inside each class, we provide three functions, initialization, loss function and prediction function. 
+
+To be specific, we can first initialize the model with given parameters. Secondly, the loss funtion is able to calculate return the current loss as well as gradient of negative loglikelihood function, based on the current parameters in the model. This is crutial, because the loss and gradient will be the input of the optimization method, which will in turn return the updated model for the loss function to calculte new loss and gradient. Finally, the prediction function is able to predict the future time series based on historical time series and fitted parameters.
+
 
 \subsection{Optimization}
 After the model type being fixed, there would be certain loss function regarding the selected model. The key of model fitting is to decide the parameters, which are derived by minimizing the loss function. Therefore, certain optimization techniques should be applied during the fitting. In our software, the user could choose the optimization tool between gradient descent, Newton method and stochastic gradient descent according to the scale of the problem.
@@ -92,13 +97,17 @@ We develop a solver module as the main driver program that uses both model and o
 After model fitting, in order to provide the user with more overall information about the model, our software also do inference work regarding the parameters. The software would construct confidence interval of given level for each parameter, conduct test to decide the non-zero parameters and calculate the corresponding P-value. This could help to identify the pattern of the model and help the user develop deeper understanding of the given time series.
 
 \subsection{Trading strategy}
-The software is able to predict the future price for each stock based on the fitted model. Hence, in the data visualization part, it would plot the estimated future price and an prediction interval along with the previous price that is already known. Together, some trading strategy would be made based on the prediction. The software could provide the user with the selling or buying point of certain stocks.
+
+The software is able to generate trading signal based on predicted price. To be specific, it can detect which time point to buy and which to sell.  Moreover, it can calculate the profit and loss based on existing trading signal. 
+
+The most important part is a function that can automatically do the trading with historical data and fitted model. This function will call other  functions from the "model" as well as the functions that generate signals and calculate the profit. It will finally return the predicted price, trading signal and profit time series. Moreover, there're many options for the trading, for instance, you can specify the trading frequency, the prediction length. 
+
 
 \subsection{Option pricing}
 option pricing
 
 \subsection{Clustering}
-When a large number of time series are given, some of them may share similar patterns since they might be commonly affected by several intrinsic factors. With clustering techniques, the software would be able to identify the similar time series, i.e. stocks with similar variation, and divide them into groups. This would help the user gain a better knowledge of the stocks and their patterns.
+
 
 \subsection{Model reduction}
 model reduction
@@ -110,6 +119,8 @@ independent component analysis \cite{hyvarinen2000independent}.
 \subsection{Modal validation}
 \subsection{Finanical data}
 \subsection{Trading strategy}
+In this section, we demonstrate how we can use our code to do the trading strategy. We pick GOOGLE stock price from 01/02/2015 to 12/09/2016, which contains 490 trading days data. To begin with,  we made use of the first 100 data points to fit AR(5) model, and then predicted future prices. This part is similar to the above section, so we will omit the details, including the optimization procedure. After getting the fitted model, we input it as well as some parameters into trading package. There, we specify the parameters as follows. The training length $l=100$. The prediction step is $nstep=20$. The length of trading window $window=5$. And the initial money to invest $money=100$. 
+
 \subsection{Option pricing}
 \subsection{Clustering}
 \subsection{Model reduction}

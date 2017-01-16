@@ -1,0 +1,37 @@
+The model related functions are written in \texttt{model.py}, which contains two model classes: AR and MA. They are used to fit an AR or MA model by given parameters, to compute the log-likelihood and gradients given an AR or MA model and the data and to give predictions. The functions are introduced below.
+Firstly, you can fit an AR or MA model by given parameters. The inputs are as follows: 
+\begin{enumerate}
+\item \texttt{lag}: the lag parameter for the fitted model, a number;
+\item \texttt{phi}: the coefficients for the fitted model, a \texttt{numpy} array whose dimension is the \texttt{lag} given above;
+\item \texttt{sigma}: the variance of noise for the fitted model, a number;
+\item \texttt{intercept}: the intercept of noise for the fitted model, a number.
+\end{enumerate}
+The output is a model object.
+To fit the model, we can run
+\begin{lstlisting}[language=Python]
+AR_model = AR(lag=3, phi=np.array([[1],[1],[1]]), sigma=1, intercept=0.1)
+MA_model = MA(lag=3, phi=np.array([[1],[1],[1]]), sigma=1, intercept=0.1)
+\end{lstlisting}
+Secondly, you can compute the log-likelihood and gradients given an AR or MA model and the data. The input is as follows:
+\begin{enumerate}
+\item \texttt{data}: One or several time series. The input data should be a 2-dimensional array. Each row of data represents a time series over the time, e.g. the stock return over the year of a single stock. The number of rows should be the number of time series.
+\end{enumerate}
+The output is a number for the computed loglikelihood and a tuple for the computed gradients. This function is public but mostly it serve for the \texttt{Solver} class. 
+To compute the log-likelihood and the gradients, we can run 
+\begin{lstlisting}[language=Python]
+AR_llh, AR_grads= AR_model.loss(data)
+MA_llh, MA_grads= MA_model.loss(data)
+\end{lstlisting}
+Finally, you can make prediction based on a fitted model. The input is as follows:
+\begin{enumerate}
+\item \texttt{data}: the time series before the first prediction. The number of columns (the length of the time series) should exceed the given lag for a reasonable prediction;
+\item \texttt{nstep}: the number of predictions.
+\end{enumerate}
+To make predictions, we can run
+\begin{lstlisting}[language=Python]
+AR_future=AR_model.predict(data,nstep=5)
+MA_future=MA_model.predict(data,nstep=5)
+\end{lstlisting}
+
+
+

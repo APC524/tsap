@@ -1,0 +1,44 @@
+%!TEX root = ../../manual.tex
+
+The optimization part \texttt{optim.py} implements various optimization update
+rules: stochastic gradient descent (\texttt{sgd}), stochastic gradient descent
+with momentum update (\texttt{sgd\_momentum}) and
+Broyden–Fletcher–Goldfarb–Shanno algorithm (\texttt{bfgs}). 
+
+Each update rule accepts current iteration point and the gradient of the object
+function and produces the next iteration point. Each update rule has the same
+interface:
+\begin{lstlisting}[language=Python]
+def update(x, dx, config=None):
+\end{lstlisting}
+The inputs are as follows:
+\begin{enumerate}
+  \item \texttt{x}:
+    A \texttt{numpy} array giving the current iteration point.
+  \item \texttt{dx}:
+    A \texttt{numpy} array of the same shape as \texttt{x} giving the gradient
+    of the object function with respect to \texttt{x}.
+  \item \texttt{config}:
+    A dictionary containing hyper-parameter values such as learning rate,
+    momentum, etc. If the update rule requires caching values over many
+    iterations, then config will also hold these cached values.
+\end{enumerate}
+The outputs are as follows:
+\begin{enumerate}
+  \item \texttt{next\_x}:
+    The next point after the update.
+  \item \texttt{config}:
+    The config dictionary to be passed to the next iteration of the update rule.
+\end{enumerate}
+
+The update rules are called in \texttt{Solver} class like this:
+\begin{lstlisting}[language=Python]
+objfcn, grads = self.model.objfcn(self.X)
+for p, x in self.model.params.iteritems():
+    dx = grads[p]
+    config = self.optim_configs[p]
+    next_x, next_config = self.update_rule(x, dx, config)
+    self.model.params[p] = next_x
+    self.optim_configs[p] = next_config
+\end{lstlisting}
+

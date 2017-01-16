@@ -7,23 +7,55 @@
  left=20mm,
  top=20mm,
  }
- 
+ \usepackage{listings}
+ \usepackage{color}
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\lstset{ %
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
+  basicstyle=\ttfamily\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  %frame=single,	                   % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+  language=Python,                 % the language of the code
+  morekeywords={*,...},           % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mymauve},     % string literal style
+  tabsize=2,	                   % sets default tabsize to 2 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{bm}
 \usepackage{graphicx,caption,subcaption,float}
+%\usepackage{fullpage}
 
-\bibliographystyle{ieeetr}
+\bibliographystyle{plain}
 
-\title{APC524 Final project
-\\Time series analysis in python
-\\User manual}
+\title{\Huge  Time Series Analysis in Python: User Manual}
 
 \author{Wenyan Gong, Zongxi Li, Cong Ma
-\\Qingcan Wang, Zhuoran Yang, Hao Zhang
-\\Princeton University}
+\\Qingcan Wang, Zhuoran Yang, Hao Zhang}
 
 \date{\today}
 
@@ -31,35 +63,76 @@
 \maketitle
 
 \section{Introduction}
-library purpose. Install, package needed
+Time series analysis comprises methods for analyzing time series data in order to extract meaningful statistics and other characteristics of the data. It is widely used in signal processing, pattern recognition, mathematical finance, weather forecasting, earthquake prediction, control engineering, and largely in any domain of applied science and engineering which involves temporal measurements.
 
-\section{Program structure}
-structure, division of work
-\begin{figure}[H]
+In this project, we will play a game with time series in finance. It has gained its popularity in Wall Street recently, since it is fundamental to most promising quantitative investment strategies. We develop a system that can predict future prices of stocks using various kinds of methods for time series analysis. 
+
+This manual is a brief introduction of the functionality of our package. In specific,  we illustrate  how to use the provided functions to fit the model, predict the stock price, trade, cluster etc. Introduction of the main source files and key functions is also included.
+
+We  utilize standard packages from python including \texttt{numpy}, \texttt{scipy}, and \texttt{matplotlib}. The integration of \texttt{C} code  and \texttt{Python} code is based on the \texttt{Cython} package.
+
+\section{Program Structure}
+The high-level program structure is shown in Figure \ref{fig:structure}. The division of work is pretty even, and there are some minor work that are too trivial to mention extensively here. 
+\begin{figure}[htp]
         \centering
-     \includegraphics[width=.5\linewidth]{./Figure/structure.png}
+     \includegraphics[width=.8\linewidth]{./Figure/structure.png}
 \caption{Program structure and division of work}
+\label{fig:structure}
 \end{figure}
-\section{User interface}
-source file provided in ./src. Classes, member functions, etc
+Overall, the program consists of two parts. The first part deals with a single time series, and exploits the time correlation within the time series. There is data preprocessing module that takes the raw data and get the right data format for later analysis. Optimization, model, and solver are used all together to fit the models using maximum likelihood estimation. Finally, there is a post processing module that makes use of the information from model. The post processing module includes parameter inference, trading strategy, and option pricing. The second part deals with a collection of time series of data, basically it exploits the correlation between different time series. In this way, we can gain more insights into the financial market. While these insights are impossible to obtain from a single time series.
 
-As stated in previous sections, our code library integrates sampling, estimation, clustering, and statistical inference for time series models. To support these functionalities, we build interfaces that decompose the whole project into well-organized parts that enables integration.
+\section{Functionality}
+To start with, we will give an description of the source files.
+\begin{itemize}
+\item \texttt{basemodel.py}: Provided the basemodel of time series.
+\item \texttt{cluster.py}:  Provided the \texttt{Cluster} class for clustering. It includes four clustering methods: k-means, hierarchy clustering, Gaussian mixture modeling, and spectral clustering.
+\item \texttt{Data\_prossessor.py}:  Provided the transforming function between stock price and return, the function getting the maximum drawdown and the function returning the indicator of peak and trough.
 
-In specific, our project consists of five classes: “Model”, “Simulation”, “Optimization”, “Inference”, and “ Clustering”. The pivotal idea is to decouple the times series models and the methods that work on models. By doing so, we can not only obtain a clearer view of the whole picture, but, more importantly, enables users to apply the statistical methods to more datasets, thus enhance usability. A detailed description of these class are as follows.
+\item \texttt{Gradient\_check.py}: Provided the function for deriving numerical gradient.
 
-The “Model” class consists of a variety of time series models. Each model is identified by its parameters and the major goal of data analysis is to learn these parameters from the data. For each model, we first define a function that formulates the model. Then we define a loss function and the goal of learning the model is reduce to minimizing the loss function. Since we use first- and second-order optimization methods, we also compute its gradient and Hessian.
-The “Simulation” class consists tools to sample data from the time series models. Although working on real-world datasets is more interesting, simulated data enables us to access the per- formance of the statistical procedures. The sampling function treats a model as input and use Bayesian sampling method such as Markov Chain Monte Carlo and Gibbs sampling to generate simulated data.
+\item \texttt{Inference.py}: Provided functions for computing the auto-covariance of \texttt{AR} model and testing significance of parameters.
 
-The “Optimization” class consists of optimization tools. In general, an optimization procedure minimizes the loss function using gradient and/or Hessian information of the loss function. In this class, we will realize various popular optimization algorithms that enjoy great empirical success in deep learning. Some examples are gradient descent, stochastic gradient descent, momentum method, Adgrad, conjugate gradient, Newton method.
+\item \texttt{Model.py}: Provided model class \texttt{AR} and \texttt{MA}, including functions for computing the log-likelihood and gradient given the data and an \texttt{AR} or \texttt{MA} model and the function for future price prediction.
 
-The “Inference” class consists of statistical procedures for time series models. We construct confidence intervals and hypothesis tests for the model parameters. After estimating the model, it is not clear whether estimation is accurate. Statistical inference enables us to access the uncertainty of our estimation procedure. Out inference functions will take the model and data as input, and outputs a confidence interval or test statistic. When using the simulated data, statistical inference enables us to quantitively understand the performance of estimation.
+\item \texttt{Optim.py}: Provided several optimization methods: stochastic gradient descent, stochastic gradient descent with momentum update and Broyden–Fletcher–Goldfarb–Shanno algorithm
 
-Finally, the “Clustering” class consists methods to cluster data into groups. For finance data, this task is of great importance. For example, stocks in different sectors behave differently. It is meaningful to cluster these stocks to reveal more fine-grained information of the market. Some of the procedures consists of K-means, Gaussian mixture model, hierarchical clusterin, and DB- SCAN algorithm. Note that clustering algorithms work for general datasets. Thus this class may potentially have broader application.
+\item \texttt{Option\_pricing.py}: Provided functions for option pricing.
 
-\section{Functions}
-explain algorithms, and cite reference. for example, independent component analysis \cite{hyvarinen2000independent}.
+\item \texttt{Reduction.py}: Provided functions for dimensional reduction for data visualization.
 
-demos are provided in ./demo
+\item \texttt{Solver.py}: Provided functions for model fitting using maximum likelihood estimation given the data and the specified model.
+
+\item \texttt{Trading.py}: Provided functions for deciding the transaction time point based on future price prediction and computing profit over the time.
+
+\item \texttt{Ts\_gen.pyx} \& \texttt{c\_ts\_gen.c}: Provided functions to generate simulation data.
+
+\end{itemize}
+
+\subsection{Data Preparation and Preprocessing}
+\input{input/yzr/data}
+
+\subsection{Model}
+\input{input/gwy/model}
+
+\subsection{Optimization}
+\input{input/wqc/optim}
+
+\subsection{Solver}
+\input{input/mc/solver}
+\subsection{Inference}
+\input{input/yzr/inference}
+
+\subsection{Trading Strategy}
+\input{input/lzx/trading}
+
+\subsection{Option Pricing}
+\input{input/wqc/option}
+
+\subsection{Clustering}
+\input{input/yzr/clustering}
+
+\subsection{Model Reduction}
+\input{input/zh/reduction}
 
 \bibliography{ref}
 \end{document}

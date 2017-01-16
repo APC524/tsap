@@ -1,0 +1,22 @@
+%!TEX root = ../../report.tex
+In this demo, we use simulated data to validate the models we wrote. In the first place, we generate a time series of length $200$ from the \texttt{AR(1)}  model with parameters $\phi = 0.5$, $\sigma^2 = 1$ and $\text{intercept}=0$. The plot of this time series can be seen in Figure \ref{fig:AR1}(a). After generating the time series, we plot the auto-correlation coefficients with respect to the order of lag as in Figure \ref{fig:AR1}(b). As we can see, the estimated order is around $2$. To test the solver we wrote for the model, we specify the lag to be $1$, which is the same as the parameters for the simulated data. Then we use the solver to conduct maximum likelihood estimation on the simulated data. Figure \ref{fig:AR1}(c) shows the loss history for two different optimization methods. As we can see, the loss steadily decreases for both methods and converges to the same value. The difference is that with momentum updates, the loss function converges faster. And this matches the theory that gradient descent with momentum term has better convergence rate. In the end, the solver returns the parameters of the fitted \texttt{AR(1)} model: $\phi=0.49$, $\sigma^2 = 1.02$ and $\text{intercept} = 0.02$.
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[t]{0.32\linewidth}
+		\centering
+		\includegraphics[width = 1 \textwidth]{./Figure/AR1.pdf}
+		\caption{Time Series}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.32 \linewidth}
+		\centering
+		\includegraphics[width = 1 \textwidth]{./Figure/AR1_acf.pdf}
+		\caption{Auto-correlation Coefficient}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.32\linewidth}
+		\centering
+		\includegraphics[width = 1 \textwidth]{./Figure/AR_opt.pdf}
+		\caption{Loss History}
+	\end{subfigure}
+	\caption{(a) shows the time series generate from the AR$(1)$ model with parameters $\phi = 0.5$, $\sigma^2 = 1$ and $\text{intercept}=0$. (b) shows the auto-correlations with respect to the order of the lag. (c) shows the loss history of two different optimization methods.}
+	\label{fig:AR1}
+\end{figure}
