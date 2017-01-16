@@ -3,8 +3,8 @@ import math
 import numpy as np
 import sys
 if "../" not in sys.path:
-  sys.path.append("../src/")
-import model
+    sys.path.append("../")
+import tsap.model
 
 class TestModel(unittest.TestCase):
     def testARloglklh1(self):
