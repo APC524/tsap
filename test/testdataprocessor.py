@@ -3,8 +3,8 @@ import math
 import numpy as np
 import sys
 if "../" not in sys.path:
-  sys.path.append("../src/")
-import data_processor as dp
+  sys.path.append("../")
+import tsap.data_processor as dp
 
 
 

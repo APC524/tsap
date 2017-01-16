@@ -1,10 +1,10 @@
 import sys
 if "../" not in sys.path:
-    sys.path.append("../src/")
+    sys.path.append("../")
 
 import matplotlib.pyplot as plt
 import numpy as np
-from option_pricing import OptionPricing
+from tsap.option_pricing import OptionPricing
 
 
 def main():
