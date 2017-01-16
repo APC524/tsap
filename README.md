@@ -23,14 +23,15 @@ reduced order model for price prediction.
 ## Functionality
 
 TSAP package provides six Python classes.
+
 1. **AR**: the autoregressive model to fit the imput stock price series,
    computing the log-likelihood and the gradient.
 2. **MR**: the moving average model.
 3. **Solver**: estimate the model parameters given the model class and the
    optimization method.
-4. OptionPricing: calculate the option price given the underlying stock.
-5. Cluster: impelement the clustering of multiple stock price series.
-6. Reduction: build a reduced order model for price prediction. 
+4. **OptionPricing**: calculate the option price given the underlying stock.
+5. **Cluster**: impelement the clustering of multiple stock price series.
+6. **Reduction**: build a reduced order model for price prediction. 
 
 Following is the high-level program structure figure.
 ![Program structure](https://github.com/APC524/tsap/blob/master/doc/report/Figure/structure.png)
